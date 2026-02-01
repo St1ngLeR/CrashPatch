@@ -4,7 +4,7 @@
 
 CrashPatch for "classic" Crashday 1.2 is the first release to provide a large number of QoL fixes for the game. CrashPatch solves a wide range of problems, from fixing critical failures, to various major and minor improvements to the game to ensure a comfortable game in modern realities, which makes the choice optimal for both new and old players.
 
-# Fixes, improvements & additions
+## Fixes, improvements & additions
 
 Changes marked with ⚙️ can be configured/toggled via the INI file. These options are enabled by default unless stated otherwise.
 
@@ -58,3 +58,8 @@ Changes marked with ⚙️ can be configured/toggled via the INI file. These opt
 - Unhidden "Master Server Address" input box in the "Network Settings" page.
 - Track editor help window is hidden on opening.
 - ⚙️ Restored the display of the nickname in the main menu (can be enabled in the config).
+
+## Install & usage
+To make ASI plugin work in the game you need to use [ThirteenAG's Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader) and put plugin files in to game directory or folders mentioned in ThirteenAG's loader GitHub page.
+
+CrashPatch works automatically out of the box, but you can change the settings offered inside the `CrashPatch.ini` file.
