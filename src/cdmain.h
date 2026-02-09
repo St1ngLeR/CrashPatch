@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <math.h>
+#include <random>
 
 DWORD p_CDDir = 0x7E5FF0;
 DWORD p_CDRender = 0x7CF700;
@@ -12,6 +13,12 @@ DWORD p_PlayersCount = 0x78CEDC;
 DWORD p_CDControl = 0x78D5F4;
 DWORD p_CDNetwork = 0x7CD0E0;
 DWORD p_CrashGUI = 0x78D65C;
+
+float old_car_timer;
+
+int player_id0;
+
+std::random_device rd;
 
 enum class CDPlayer
 {
@@ -270,6 +277,34 @@ void WriteMemoryMatrix4x4(uintptr_t addr, Matrix4x4 mat, bool vp = false)
 	injector::WriteMemory(addr + 0x2C, mat.data[2][3], vp);
 }
 
+void __declspec(naked) RepairPlayerCar()
+{
+	__asm
+	{
+		push ebx
+		mov ebx, [player_id0]
+			mov eax, ebx
+				pop ebx
+
+				push 0x44BA60
+				retn
+	}
+}
+
+void __declspec(naked) RespawnOnCPPlayerCar()
+{
+	__asm
+	{
+		push ebx
+		mov ebx, [player_id0]
+			mov eax, ebx
+				pop ebx
+
+				push 0x507400
+				retn
+	}
+}
+
 template<typename T>
 void WriteString(uintptr_t address, const char* text, bool vp = true)
 {
@@ -446,6 +481,32 @@ void SetString(void* baseAddress, const char* text)
 	strcpy(textPtr, text);
 }
 
+template<typename... Args>
+std::string FormatStr(const std::string& text, Args... args) {
+
+	// Определяем размер буфера
+	int size = std::snprintf(nullptr, 0, text.c_str(), args...);
+	if (size < 0) {
+		return text; // Ошибка форматирования
+	}
+
+	// Создаем буфер и форматируем
+	std::vector<char> buffer(size + 1);
+	std::snprintf(buffer.data(), buffer.size(), text.c_str(), args...);
+
+	return std::string(buffer.data());
+}
+
+int GetWindowWidth()
+{
+	return injector::ReadMemory<int>(injector::ReadMemory<DWORD>(0x7CF6FC, true) + 0x250, true);
+}
+
+int GetWindowHeight()
+{
+	return injector::ReadMemory<int>(injector::ReadMemory<DWORD>(0x7CF6FC, true) + 0x254, true);
+}
+
 std::string CDDir()
 {
 	if (injector::ReadMemory<void*>(p_CDDir) != NULL)
@@ -464,6 +525,78 @@ DWORD CrashGUI()
 DWORD CDNetwork()
 {
 	return injector::ReadMemory<DWORD>(p_CDNetwork);
+}
+
+bool IsServer()
+{
+	if (CDNetwork())
+	{
+		return !injector::ReadMemory<bool>(CDNetwork() + 0x4, true);
+	}
+}
+
+std::string GetMPPlayerName(int id)
+{
+	if (CDNetwork())
+	{
+		return GetString((void*)(0x7A77C8 + (0x40 * id) + 4));
+	}
+}
+
+BYTE GetCurPlayerInMPList()
+{
+	if (CDNetwork())
+	{
+		return injector::ReadMemory<BYTE>(CDNetwork() + 0xC, true);
+	}
+}
+
+void SetCurPlayerInMPList(int id)
+{
+	if (CDNetwork())
+	{
+		injector::WriteMemory<BYTE>(CDNetwork() + 0xC, id, true);
+	}
+}
+
+BYTE GetMPPlayersCount()
+{
+	if (CDNetwork())
+	{
+		return injector::ReadMemory<BYTE>(CDNetwork() + 0xE, true);
+	}
+}
+
+bool IsVotingForRestart(int id)	// works only for host :(
+{
+	if (CDNetwork())
+	{
+		return injector::ReadMemory<bool>(CDNetwork() + 0xE4 + id, true);
+	}
+}
+
+bool IsVotingForRaceEnd(int id)	// works only for host :(
+{
+	if (CDNetwork())
+	{
+		return injector::ReadMemory<bool>(CDNetwork() + 0xEC + id, true);
+	}
+}
+
+bool IsRestartComing()	// works only for host :(
+{
+	if (CDNetwork())
+	{
+		return injector::ReadMemory<bool>(CDNetwork() + 0x134, true);
+	}
+}
+
+bool IsRaceEndComing()	// works only for host :(
+{
+	if (CDNetwork())
+	{
+		return injector::ReadMemory<bool>(CDNetwork() + 0x135, true);
+	}
 }
 
 DWORD CDRace()
@@ -486,6 +619,11 @@ DWORD CDRender()
 DWORD CDControl()
 {
 	return injector::ReadMemory<DWORD>(p_CDControl);
+}
+
+float GetGameSpeed()
+{
+	return injector::ReadMemory<float>(injector::ReadMemory<DWORD>(0x7DC550, true) + 0x8, true);
 }
 
 int GetPlayersCount()
@@ -863,6 +1001,21 @@ const char* LocStr(const char* section, const char* key)
 	}
 
 	return static_cast<const char*>(result);
+}
+
+void KickPlayer(int id)
+{
+	__asm
+	{
+		mov eax, ds: [0x7CD0E0]
+		mov edx, id
+		mov ecx, 0x5C8900
+		call ecx
+
+		mov eax, id
+		mov ecx, 0x55EF90
+		call ecx
+	}
 }
 
 void ShowHUDUpperMessage(const char* text, int color)

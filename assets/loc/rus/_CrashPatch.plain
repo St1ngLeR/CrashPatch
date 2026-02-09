@@ -1,0 +1,26 @@
+# CrashPatch by St1ngLeR (https://github.com/St1ngLeR/CrashPatch)
+# ---------------------------------------------------------------------------------
+
+Language: rus	# eng, rus, ger
+LanguageName: Русский	# English, Русский, Deutsch
+Sections: 2
+
+#-------------------------------------------------------------------------------------
+SECTION: CrashPatch.hud
+Keys: 2
+
+ID   QUESTIONCONTINUERACE
+DESC (Original:) End the event and return to the lobby? All players in the session|will be automatically returned to the lobby along with the host.
+TEXT Завершить заезд и вернуться в лобби? Все игроки в сессии будут|автоматически возвращены в лобби вместе с хостом.
+
+ID   WAITINGFORSERVERCHOICE
+DESC (Original:) Waiting for host response...
+TEXT Ожидание ответа хоста...
+
+#-------------------------------------------------------------------------------------
+SECTION: CrashPatch.mplobby
+Keys: 1
+
+ID   btnKickPlayer.Caption
+DESC (Original:) Kick Player
+TEXT Выгнать игрока

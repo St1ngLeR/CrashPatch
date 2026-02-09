@@ -1,0 +1,234 @@
+CrashGUI-File                                         # Changed for CrashPatch
+backmain.tga      		                         # Background picture
+$ID intrface/mplobby.cgf MenuTitle			                         # Title string
+full                # "blinds" background type
+default # default group
+default                # padding distance of elements to their parent frame (in pixels)
+default             # additional left/right padding of elements towards the center of their parent
+
+Next:			                                 #
+Type: GUIButton                                        # element type
+Name: btnLeaveLobby                                     # element name
+Group: default
+Parent: default
+Style: button_back
+Text: $ID intrface/mplobby.cgf btnLeaveLobby.Caption                                         # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20		                                       # x coord
+Y: 440		                                       # y coord
+Width: 130	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat	                                       # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIFrame                                         # element type
+Name: frmLobbyBack                                  # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: default                                   # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 30#345		                                       # x coord
+Y: 80		                                       # y coord
+Width: 580 #190	                                       # width ("default" for automatic)
+Height: 360                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnSelectCar                                    # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf btnSelectCar.Caption	                                      # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 50		                                       # x coord
+Y: 300		                                       # y coord
+Width: 100						# width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: tiny 					# font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnSelectTeam                                    # element name
+Group: default
+Parent: default
+Style: halign_righttolast
+Text: $ID intrface/mplobby.cgf btnSelectTeam.Caption                                      # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 50		                                       # x coord
+Y: 280		                                       # y coord
+Width: 100						# width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: tiny 					# font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnKickPlayer                                   # element name
+Group: default
+Parent: default
+Style: halign_righttolast
+Text: $ID CrashPatch.mplobby btnKickPlayer.Caption                                    # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 50		                                       # x coord
+Y: 380		                                       # y coord
+Width: 100						# width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: tiny 					# font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnMarkMeReady                                   # element name
+Group: default
+Parent: default
+Style: halign_righttolast
+Text: $ID intrface/mplobby.cgf btnMarkMeReady.Caption                                    # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 50		                                       # x coord
+Y: 380		                                       # y coord
+Width: 100						# width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: tiny 					# font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnSetupRace                                   # element name
+Group: default
+Parent: default
+Style: halign_righttolast
+Text: $ID intrface/mplobby.cgf btnSetupRace.Caption                                     # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 50		                                       # x coord
+Y: 380		                                       # y coord
+Width: 100						# width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: tiny 					# font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIFrame                                         # element type
+Name: frmPlayerInfo                                    # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf frmPlayerInfo.Caption                  # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 50#345		                                       # x coord
+Y: 100		                                       # y coord
+Width: 265 #190	                                       # width ("default" for automatic)
+Height: 150                                            # height ("default" for automatic)
+TextAlign: left                                       # text alignment (left, right, center, default)
+TextStyle: fat                                          # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:	                                       #
+Type: GUILabel                                         # element type
+Name: lblPlayersInGame                                  # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf lblPlayersInGame.Caption                     # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 50                                  #400		                                       # x coord
+Y: 270                                 #85		                                       # y coord
+Width: 100	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                  #right                                       # text alignment (left, right, center, default)
+TextStyle: tiny                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:	                                       #
+Type: GUILabel                                         # element type
+Name: lblNextRace                                    # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf lblNextRace.Caption                                  # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 350                                  #400		                                       # x coord
+Y: 105                                  #85		                                       # y coord
+Width: 100	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                  #right                                       # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIListBox                                         # element type
+Name: lstLobbyChat                                  # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf lstLobbyChat.Caption                                   # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 45#345		                                       # x coord
+Y: 320		                                       # y coord
+Width: 550 #190	                                       # width ("default" for automatic)
+Height: 110                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+MaxEntries: 512                                        #
+Sort: false                                         # Sortiere Einträge nach ABC
+
+Next:	                                       #
+Type: GUIButton                                         # element type
+Name: btnChatKeyHint                                    # element name
+Group: default
+Parent: default
+Style: button_bottomspecial1
+Text: $ID intrface/mplobby.cgf btnChatKeyHint.Caption                     # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 485                                  #400		                                       # x coord
+Y: 270                                  #85		                                       # y coord
+Width: 100	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: default                                  #right                                       # text alignment (left, right, center, default)
+TextStyle: default                                    # font type (normal, fat, verybig)
+TextColor: default                                    # rgb text color or "default"
+
+Next:	                                       #
+Type: GUILabel                                         # element type
+Name: lblOnlineRaceDetails                             # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf lblOnlineRaceDetails.Caption                            # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 350                                  #400		                                       # x coord
+Y: 190                                  #85		                                       # y coord
+Width: 100	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                  #right                                       # text alignment (left, right, center, default)
+TextStyle: tiny                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:	                                       #
+Type: GUILabel                                         # element type
+Name: lblOnlineRaceDetailsData                             # element name
+Group: default
+Parent: default
+Style: widescreen_aligncenter
+Text: $ID intrface/mplobby.cgf lblOnlineRaceDetailsData.Caption                              # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 460                                  #400		                                       # x coord
+Y: 190                                  #85		                                       # y coord
+Width: 100	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                  #right                                       # text alignment (left, right, center, default)
+TextStyle: tiny                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+

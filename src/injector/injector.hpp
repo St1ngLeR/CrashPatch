@@ -534,6 +534,17 @@ inline void MakeJA(memory_pointer_tr at, memory_pointer_raw dest, bool vp = true
 }
 
 /*
+ *  MakeJNE
+ *      Creates a JNE instruction at address @at that jumps if above into address @dest
+ *      If there was already a branch instruction there, returns the previosly destination of the branch
+ */
+inline void MakeJNE(memory_pointer_tr at, memory_pointer_raw dest, bool vp = true)
+{
+    WriteMemory<uint16_t>(at, 0x850F, vp);
+    MakeRelativeOffset(at + 2, dest, 4, vp);
+}
+
+/*
  *  MakeNOP
  *      Creates a bunch of NOP instructions at address @at
  */
