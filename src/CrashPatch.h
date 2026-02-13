@@ -44,6 +44,7 @@ void Init()
     bool TestDriveInMultiplayerConf = patchconf["CrashPatch"].get<int>("TestDriveInMultiplayer");
     bool AllowRandomNumPlatesConf = patchconf["CrashPatch"].get<int>("AllowRandomNumPlates");
     bool DynamicSkyBoxConf = patchconf["CrashPatch"].get<int>("DynamicSkyBox");
+    bool VignetteDuringGameplayConf = patchconf["CrashPatch"].get<int>("ShowVignetteDuringGameplay");
 
     /* Handling one-time patches (not requiring any loop) */
 
@@ -57,6 +58,11 @@ void Init()
     if (TestDriveInMultiplayerConf)
     {
         TestDriveInMultiplayer();
+    }
+
+    if (VignetteDuringGameplayConf)
+    {
+        VignetteDuringGameplay();
     }
 
     CrshPath();
@@ -85,7 +91,6 @@ void Init()
     DisableHeightDependentCarRespawn();
     DisableRpmtexDependency();
     SkipEventLoading();
-    VignetteDuringGameplay();
     TestDriveTweaks();
 
     while (true)
