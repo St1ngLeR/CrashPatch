@@ -283,11 +283,11 @@ void __declspec(naked) RepairPlayerCar()
 	{
 		push ebx
 		mov ebx, [player_id0]
-			mov eax, ebx
-				pop ebx
+		mov eax, ebx
+		pop ebx
 
-				push 0x44BA60
-				retn
+		push 0x44BA60
+		retn
 	}
 }
 
@@ -297,11 +297,11 @@ void __declspec(naked) RespawnOnCPPlayerCar()
 	{
 		push ebx
 		mov ebx, [player_id0]
-			mov eax, ebx
-				pop ebx
+		mov eax, ebx
+		pop ebx
 
-				push 0x507400
-				retn
+		push 0x507400
+		retn
 	}
 }
 

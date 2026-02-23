@@ -92,6 +92,7 @@ void Init()
     DisableRpmtexDependency();
     SkipEventLoading();
     TestDriveTweaks();
+    FixDriverModels();
 
     while (true)
     {

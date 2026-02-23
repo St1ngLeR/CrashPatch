@@ -615,3 +615,8 @@ void CarPhysicsIdleFix()    // TODO
         }
     }
 }
+
+void FixDriverModels()
+{
+    injector::WriteMemory<BYTE>(0x5D62C9, 0xEB, true);
+}

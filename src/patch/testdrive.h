@@ -1,6 +1,17 @@
 /* "Test Drive" game mode patches */
 
-std::string testdrive_default_settings = "opps=0 damagerealism=0 gamevar=testdrive-default";
+std::string testdrive_default_settings = "\
+opps=0 \
+damagerealism=0 \
+gamevar=testdrive-default \
+forcestartgridpos[0]=1 \
+forcestartgridpos[1]=2 \
+forcestartgridpos[2]=3 \
+forcestartgridpos[3]=4 \
+forcestartgridpos[4]=5 \
+forcestartgridpos[5]=6 \
+forcestartgridpos[6]=7 \
+forcestartgridpos[7]=8";
 
 void __declspec(naked) a_TestDriveOptions()
 {
@@ -109,6 +120,8 @@ void TestDriveTweaks()
 {
     injector::WriteMemory<short>(0x641179, 0x54EB, true);
 
-    injector::WriteMemory<int>(0x63CFAE, 0xFFFF47E9, true);
+    injector::WriteMemory<int>(0x63CFAE, 0xFFFF4BE9, true);
     injector::WriteMemory<BYTE>(0x63CFB2, 0xFF, true);
+
+    injector::MakeNOP(0x5A086C, 2, true);
 }
