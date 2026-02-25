@@ -34,6 +34,8 @@ const char* nodamage_value = "-1";
 
 bool NoDamage_init;
 
+std::string numplates_dir = "\\textures\\numplate\\";
+
 void __declspec(naked) a_VehicleBlastBomb()
 {
     __asm
@@ -413,26 +415,28 @@ void RandomNumPlates()
         {
             if (RandomNumPlates_init == false)
             {
-                for (const auto& entry : std::filesystem::directory_iterator(CDDir() + "\\textures\\numplate\\"))
+                for (const auto& entry : std::filesystem::recursive_directory_iterator(CDDir() + numplates_dir))
                 {
                     if (entry.is_regular_file())
                     {
-                        std::string filename = entry.path().filename().stem().string();
-                        std::string extension = entry.path().extension().string();
+                        std::filesystem::path relative = std::filesystem::relative(entry.path(), CDDir() + numplates_dir);
+                        std::string filename = relative.filename().stem().string();
+                        std::string extension = relative.extension().string();
+                        std::string result = relative.replace_extension(".tga").string();
 
                         if ((extension == ".tga") || (extension == ".dds"))
                         {
                             if (filename.rfind("l_", 0) == 0)
                             {
-                                numplates_l.push_back(filename + ".tga");
+                                numplates_l.push_back(result);
                             }
                             else if (filename.rfind("s_", 0) == 0)
                             {
-                                numplates_s.push_back(filename + ".tga");
+                                numplates_s.push_back(result);
                             }
                             else if (filename.rfind("u_", 0) == 0)
                             {
-                                numplates_u.push_back(filename + ".tga");
+                                numplates_u.push_back(result);
                             }
                         }
                     }

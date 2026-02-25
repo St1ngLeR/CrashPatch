@@ -45,6 +45,7 @@ void Init()
     bool AllowRandomNumPlatesConf = patchconf["CrashPatch"].get<int>("AllowRandomNumPlates");
     bool DynamicSkyBoxConf = patchconf["CrashPatch"].get<int>("DynamicSkyBox");
     bool VignetteDuringGameplayConf = patchconf["CrashPatch"].get<int>("ShowVignetteDuringGameplay");
+    bool OilOnTiresConf = patchconf["CrashPatch"].get<int>("OilOnTires");
 
     /* Handling one-time patches (not requiring any loop) */
 
@@ -128,6 +129,11 @@ void Init()
             DynamicSkyBox();
         }
 
+        if (OilOnTiresConf)
+        {
+            OilEffect();
+        }
+
         SaveContentUnlimit();
         ChangeKeyboardLayout();
         VehicleBlastBomb();
@@ -139,7 +145,6 @@ void Init()
         NewRandomSeed();
         FixSelTrackPreview();
         HideUnusedElemsTrkLoad();
-        OilEffect();
         NoDamage();
         MPFinishScreen();
         MPKick();
