@@ -463,7 +463,7 @@ void RandomNumPlates()
         SetRandomNumPlate(numplates_s, 0x5D6584, numplate_index);
         SetRandomNumPlate(numplates_u, 0x5D65B3, numplate_index);
 
-        if (CDNetwork() || ((GetGarageColorType() == 1) && (GetInterfacePage() != "careerselevent.cgf")))
+        if (CDNetwork() || GetLoadingState() >= 110)
         {
             numplate_index = 0;
         }

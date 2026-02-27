@@ -522,6 +522,11 @@ DWORD CrashGUI()
 	return injector::ReadMemory<DWORD>(p_CrashGUI);
 }
 
+BYTE GetLoadingState()
+{
+	return injector::ReadMemory<BYTE>(0x70EB5C);
+}
+
 DWORD CDNetwork()
 {
 	return injector::ReadMemory<DWORD>(p_CDNetwork);
