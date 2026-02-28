@@ -463,7 +463,7 @@ void RandomNumPlates()
         SetRandomNumPlate(numplates_s, 0x5D6584, numplate_index);
         SetRandomNumPlate(numplates_u, 0x5D65B3, numplate_index);
 
-        if (CDNetwork() || GetLoadingState() >= 110)
+        if (CDNetwork() || (GetLoadingState() >= 110 && !CDRace()))
         {
             numplate_index = 0;
         }
