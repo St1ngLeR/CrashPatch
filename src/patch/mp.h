@@ -31,6 +31,8 @@ std::string dlg_kick_no;
 std::string dlg_kick_yes;
 std::string dlg_kick_text;
 
+bool mplobby_init;
+
 void __declspec(naked) MPVoting_btns()
 {
     __asm
@@ -485,6 +487,52 @@ void __declspec(naked) KickPlayerButton()
     }
 }
 
+void __declspec(naked) a_mplobby_init1()
+{
+    __asm
+    {
+        mov byte ptr [mplobby_init], 1
+        call sub_55A860
+        jmp loc_564E3D
+
+    sub_55A860:
+        push 0x55A860
+        retn
+
+    loc_564E3D:
+        push 0x564E3D
+        retn
+    }
+}
+
+void __declspec(naked) a_mplobby_init2()
+{
+    __asm
+    {
+        mov byte ptr [mplobby_init], 0
+        mov eax, ds: [0x7CD0E0]
+        jmp loc_5679E2
+
+    loc_5679E2:
+        push 0x5679E2
+        retn
+    }
+}
+
+void __declspec(naked) a_mplobby_init3()
+{
+    __asm
+    {
+        mov byte ptr[mplobby_init], 0
+        mov eax, ds: [0x7CD0E0]
+        jmp loc_56774D
+
+    loc_56774D:
+        push 0x56774D
+        retn
+    }
+}
+
 void MPKick()
 {
     dlg_kick_no.reserve(8192);
@@ -529,6 +577,9 @@ void MPKick()
     injector::WriteMemory(0x5642D4, btn_kick.data(), true);
     injector::MakeNOP(0x5643CF, 5, true);
 
+    injector::MakeJMP(0x564E38, a_mplobby_init1, true);
+    injector::MakeJMP(0x5679DD, a_mplobby_init2, true);
+    injector::MakeJMP(0x567748, a_mplobby_init3, true);
 
     if (CDNetwork())
     {
@@ -538,43 +589,46 @@ void MPKick()
         dlg_kick_yes = LocStr("gametext/general.txt", "YES");
         dlg_kick_text = FormatStr(LocStr("gametext/netlobby.txt", "LOBBYKICKPLAYERCONFIRM"), GetMPPlayerName(GetCurPlayerInMPList()));
 
-        if (injector::ReadMemory<DWORD>(btn_kick_ptr, true))
+        if (mplobby_init == true) /*if (GetInterfacePage() == gui_mplobby)*/
         {
-            injector::WriteMemory(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x50, KickPlayerButton, true);
-            if (IsServer())
+            if (injector::ReadMemory<DWORD>(btn_kick_ptr, true))
             {
-                if (GetCurPlayerInMPList() == 0)    // the host can't kick itself
+                injector::WriteMemory(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x50, KickPlayerButton, true);
+                if (IsServer())
                 {
-                    injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
+                    if (GetCurPlayerInMPList() == 0)    // the host can't kick itself
+                    {
+                        injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
+                    }
+                    else
+                    {
+                        injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 1, true);
+                    }
+
+                    if (KeyPress(0xC8) || KeyPress(0xEC))
+                    {
+                        if (GetCurPlayerInMPList() != 0)
+                        {
+                            SetCurPlayerInMPList(GetCurPlayerInMPList() - 1);
+                        }
+                    }
+                    if (KeyPress(0xD0) || KeyPress(0xED))
+                    {
+                        if (GetCurPlayerInMPList() < GetMPPlayersCount() - 1)
+                        {
+                            SetCurPlayerInMPList(GetCurPlayerInMPList() + 1);
+                        }
+                    }
+
+                    if (GetCurPlayerInMPList() > GetMPPlayersCount() - 1)
+                    {
+                        SetCurPlayerInMPList(GetMPPlayersCount() - 1);
+                    }
                 }
                 else
                 {
-                    injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 1, true);
+                    injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
                 }
-
-                if (KeyPress(0xC8) || KeyPress(0xEC))
-                {
-                    if (GetCurPlayerInMPList() != 0)
-                    {
-                        SetCurPlayerInMPList(GetCurPlayerInMPList() - 1);
-                    }
-                }
-                if (KeyPress(0xD0) || KeyPress(0xED))
-                {
-                    if (GetCurPlayerInMPList() < GetMPPlayersCount() - 1)
-                    {
-                        SetCurPlayerInMPList(GetCurPlayerInMPList() + 1);
-                    }
-                }
-
-                if (GetCurPlayerInMPList() > GetMPPlayersCount() - 1)
-                {
-                    SetCurPlayerInMPList(GetMPPlayersCount() - 1);
-                }
-            }
-            else
-            {
-                injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
             }
         }
     }

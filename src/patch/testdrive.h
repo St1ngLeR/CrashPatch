@@ -77,25 +77,28 @@ void __declspec(naked) a_TestDriveOptions()
 
 void TestDriveRespawn()
 {
-    if (CDRace())
+    if (!CDNetwork())
     {
-        if (GetRaceState() == (BYTE)CDRaceState::InProcess)
+        if (CDRace())
         {
-            player_id0 = Player(0);
-        }
-
-        if ((GetGameMode() == (BYTE)CDGameMode::TestDrive) && (GetEventType() == (BYTE)CDEventType::testdrive_default))
-        {
-            if (GetPlayerParam<float>(CDPlayer::CarHealth, 0) > 0.f)
+            if (GetRaceState() == (BYTE)CDRaceState::InProcess)
             {
-                old_car_timer = GetPlayerParam<float>(CDPlayer::CarTimer, 0);
+                player_id0 = Player(0);
             }
-            else
+
+            if ((GetGameMode() == (BYTE)CDGameMode::TestDrive) && (GetEventType() == (BYTE)CDEventType::testdrive_default))
             {
-                if (GetPlayerParam<float>(CDPlayer::CarTimer, 0) >= old_car_timer + 3.f)
+                if (GetPlayerParam<float>(CDPlayer::CarHealth, 0) > 0.f)
                 {
-                    RepairPlayerCar();
-                    RespawnOnCPPlayerCar();
+                    old_car_timer = GetPlayerParam<float>(CDPlayer::CarTimer, 0);
+                }
+                else
+                {
+                    if (GetPlayerParam<float>(CDPlayer::CarTimer, 0) >= old_car_timer + 3.f)
+                    {
+                        RepairPlayerCar();
+                        RespawnOnCPPlayerCar();
+                    }
                 }
             }
         }

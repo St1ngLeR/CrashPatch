@@ -482,15 +482,13 @@ void SetString(void* baseAddress, const char* text)
 }
 
 template<typename... Args>
-std::string FormatStr(const std::string& text, Args... args) {
-
-	// Определяем размер буфера
+std::string FormatStr(const std::string& text, Args... args)
+{
 	int size = std::snprintf(nullptr, 0, text.c_str(), args...);
 	if (size < 0) {
 		return text; // Ошибка форматирования
 	}
 
-	// Создаем буфер и форматируем
 	std::vector<char> buffer(size + 1);
 	std::snprintf(buffer.data(), buffer.size(), text.c_str(), args...);
 
@@ -777,6 +775,14 @@ DWORD GetRaceHandler()
 	if (CDRace() != NULL)
 	{
 		return (injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0x4));
+	}
+}
+
+BYTE GetSpectatorID()
+{
+	if (CDRace() != NULL)
+	{
+		return injector::ReadMemory<BYTE>(GetRaceHandler() + 0x198);
 	}
 }
 

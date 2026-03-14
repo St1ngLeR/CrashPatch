@@ -1,7 +1,12 @@
-#include "string"
-#include "mutex"
-#include "iostream"
-#include <direct.h>
+﻿#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <mutex>
+#include <string>
+#include <thread>
+
+#include "injector/injector.hpp"
 
 #include "cdmain.h"
 
@@ -11,61 +16,117 @@
 #include "patch/intrface.h"
 #include "patch/gameplay.h"
 
-#define CONCAT(a, b) a##b
-#define UNIQUE_VAR(name) CONCAT(name, __LINE__)
+using namespace std::chrono_literals;
 
-constexpr unsigned int hash_time()
+namespace
 {
-    unsigned int hash = 0;
-    const char* time = __TIME__;  // "HH:MM:SS"
+    // Configuration keys
+    constexpr auto CONFIG_SECTION = "CrashPatch";
+    constexpr auto KEY_PLAYER_IDLE = "PlayerIdleInPTB";
+    constexpr auto KEY_TESTDRIVE_RESPAWN = "TestDriveRespawn";
+    constexpr auto KEY_SKIP_TITLE = "SkipTitleScreen";
+    constexpr auto KEY_SHOW_USERNAME = "ShowUserNameInMainMenu";
+    constexpr auto KEY_SPEED_LIMITER = "EnableSpeedLimiter";
+    constexpr auto KEY_SPEED_HACK = "AllowSpeedHack";
+    constexpr auto KEY_TESTDRIVE_MP = "TestDriveInMultiplayer";
+    constexpr auto KEY_RANDOM_PLATES = "AllowRandomNumPlates";
+    constexpr auto KEY_DYNAMIC_SKYBOX = "DynamicSkyBox";
+    constexpr auto KEY_VIGNETTE_GAMEPLAY = "ShowVignetteDuringGameplay";
+    constexpr auto KEY_OIL_TIRES = "OilOnTires";
 
-    for (int i = 0; time[i] != '\0'; ++i) {
-        hash = hash * 31 + time[i];
+    // Default values (all disabled)
+    constexpr int DEFAULT_DISABLED = 0;
+
+    // Configuration structure
+    struct PatchConfig
+    {
+        bool playerIdleInPTB = false;
+        bool testDriveRespawn = false;
+        bool skipTitleScreen = false;
+        bool showUserNameInMainMenu = false;
+        bool enableSpeedLimiter = false;
+        bool allowSpeedHack = false;
+        bool testDriveInMultiplayer = false;
+        bool allowRandomNumPlates = false;
+        bool dynamicSkyBox = false;
+        bool showVignetteDuringGameplay = false;
+        bool oilOnTires = false;
+
+        static PatchConfig loadFromFile(const std::filesystem::path& configPath)
+        {
+            PatchConfig cfg;
+            try
+            {
+                // Assume ini::open returns an object compatible with .get<int>(key)
+                auto iniFile = ini::open(configPath.string());
+
+                // Helper lambda to read boolean values (0/1) with default
+                auto readBool = [&](const char* key, bool defaultValue) -> bool {
+                    try {
+                        return iniFile[CONFIG_SECTION].get<int>(key) != 0;
+                    }
+                    catch (...) {
+                        return defaultValue;
+                    }
+                    };
+
+                cfg.playerIdleInPTB = readBool(KEY_PLAYER_IDLE, DEFAULT_DISABLED);
+                cfg.testDriveRespawn = readBool(KEY_TESTDRIVE_RESPAWN, DEFAULT_DISABLED);
+                cfg.skipTitleScreen = readBool(KEY_SKIP_TITLE, DEFAULT_DISABLED);
+                cfg.showUserNameInMainMenu = readBool(KEY_SHOW_USERNAME, DEFAULT_DISABLED);
+                cfg.enableSpeedLimiter = readBool(KEY_SPEED_LIMITER, DEFAULT_DISABLED);
+                cfg.allowSpeedHack = readBool(KEY_SPEED_HACK, DEFAULT_DISABLED);
+                cfg.testDriveInMultiplayer = readBool(KEY_TESTDRIVE_MP, DEFAULT_DISABLED);
+                cfg.allowRandomNumPlates = readBool(KEY_RANDOM_PLATES, DEFAULT_DISABLED);
+                cfg.dynamicSkyBox = readBool(KEY_DYNAMIC_SKYBOX, DEFAULT_DISABLED);
+                cfg.showVignetteDuringGameplay = readBool(KEY_VIGNETTE_GAMEPLAY, DEFAULT_DISABLED);
+                cfg.oilOnTires = readBool(KEY_OIL_TIRES, DEFAULT_DISABLED);
+            }
+            catch (const std::exception& e)
+            {
+                std::cerr << "Failed to load config: " << e.what() << std::endl;
+            }
+            return cfg;
+        }
+    };
+
+    // Compile‑time hash of __TIME__ (original logic preserved)
+    constexpr unsigned int hashTime()
+    {
+        const char* time = __TIME__;   // format "HH:MM:SS"
+        unsigned int hash = 0;
+        for (int i = 0; time[i] != '\0'; ++i)
+            hash = hash * 31 + static_cast<unsigned int>(time[i]);
+        return hash;
     }
-    return hash;
+
+    // Global flag to allow clean exit (if needed)
+    std::atomic<bool> g_running{ true };
 }
-
-std::mutex mainmutex;
-
-ini::File patchconf = ini::open(std::filesystem::current_path().string() + "\\CrashPatch.ini");
 
 void Init()
 {
-    injector::WriteMemory<int>(0x485C86, hash_time(), true);
+    // --- One‑time startup ---
+    // Write compile‑time hash to memory (original anti‑debug / obfuscation)
+    injector::WriteMemory<int>(0x485C86, hashTime(), true);
 
-    std::lock_guard<std::mutex> lock(mainmutex);
+    // Load configuration from INI file
+    std::filesystem::path configPath = std::filesystem::current_path() / "CrashPatch.ini";
+    PatchConfig cfg = PatchConfig::loadFromFile(configPath);
 
-    bool PlayerIdleConf = patchconf["CrashPatch"].get<int>("PlayerIdleInPTB");
-    bool TestDriveRespawnConf = patchconf["CrashPatch"].get<int>("TestDriveRespawn");
-    bool SkipTitleConf = patchconf["CrashPatch"].get<int>("SkipTitleScreen");
-    bool ShowUserNameConf = patchconf["CrashPatch"].get<int>("ShowUserNameInMainMenu");
-    bool SpeedLimiterConf = patchconf["CrashPatch"].get<int>("EnableSpeedLimiter");
-    bool SpeedHackConf = patchconf["CrashPatch"].get<int>("AllowSpeedHack");
-    bool TestDriveInMultiplayerConf = patchconf["CrashPatch"].get<int>("TestDriveInMultiplayer");
-    bool AllowRandomNumPlatesConf = patchconf["CrashPatch"].get<int>("AllowRandomNumPlates");
-    bool DynamicSkyBoxConf = patchconf["CrashPatch"].get<int>("DynamicSkyBox");
-    bool VignetteDuringGameplayConf = patchconf["CrashPatch"].get<int>("ShowVignetteDuringGameplay");
-    bool OilOnTiresConf = patchconf["CrashPatch"].get<int>("OilOnTires");
+    // Apply one‑time patches
+    skip_intro = cfg.skipTitleScreen;   // assuming global variable
 
-    /* Handling one-time patches (not requiring any loop) */
-
-    skip_intro = SkipTitleConf;
-
-    if (ShowUserNameConf)
-    {
+    if (cfg.showUserNameInMainMenu)
         ShowUserName();
-    }
 
-    if (TestDriveInMultiplayerConf)
-    {
+    if (cfg.testDriveInMultiplayer)
         TestDriveInMultiplayer();
-    }
 
-    if (VignetteDuringGameplayConf)
-    {
+    if (cfg.showVignetteDuringGameplay)
         VignetteDuringGameplay();
-    }
 
+    // Always‑called one‑time patches (no condition)
     CrshPath();
     FixLaunchParameters();
     NoPauseOnWindowNotFocused();
@@ -95,45 +156,32 @@ void Init()
     TestDriveTweaks();
     FixDriverModels();
 
-    while (true)
+    // --- Main loop (runs until g_running is set to false) ---
+    while (g_running.load(std::memory_order_relaxed))
     {
-        /* Handling looping patches */
-
-        if (PlayerIdleConf)
-        {
+        // Apply periodic patches (some conditional on config)
+        if (cfg.playerIdleInPTB)
             PTBPlayerIdle();
-        }
 
-        if (TestDriveRespawnConf)
-        {
+        if (cfg.testDriveRespawn)
             TestDriveRespawn();
-        }
 
-        if (SpeedLimiterConf)
-        {
+        if (cfg.enableSpeedLimiter)
             CarSpeedLimiter();
-        }
 
-        if (!SpeedHackConf)
-        {
+        if (!cfg.allowSpeedHack)
             DisableCarSpeedHack();
-        }
 
-        if (AllowRandomNumPlatesConf)
-        {
+        if (cfg.allowRandomNumPlates)
             RandomNumPlates();
-        }
 
-        if (DynamicSkyBoxConf)
-        {
+        if (cfg.dynamicSkyBox)
             DynamicSkyBox();
-        }
 
-        if (OilOnTiresConf)
-        {
+        if (cfg.oilOnTires)
             OilEffect();
-        }
 
+        // Always‑called periodic patches
         SaveContentUnlimit();
         ChangeKeyboardLayout();
         VehicleBlastBomb();
@@ -149,6 +197,8 @@ void Init()
         MPFinishScreen();
         MPKick();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        // Sleep to reduce CPU usage. Original was 1ms; increased to 10ms.
+        // Adjust based on required responsiveness.
+        std::this_thread::sleep_for(10ms);
     }
 }
