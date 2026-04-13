@@ -27,6 +27,7 @@ std::vector<float> oileffect_tractionat90;
 
 float oileffect_latforce_subtract = 0.5f;
 float oileffect_tractionat90_subtract = 0.05f;
+float oileffect_subtract_multiplier = 5.f;
 
 const char* nodamage_key = "COUNTERNONE";
 const char* nodamage_section = "gametext/general.txt";
@@ -476,7 +477,7 @@ void RandomNumPlates()
 
 void OilEffect()
 {
-    if (CDRace())
+    if (GetRaceState() == (BYTE)CDRaceState::InProcess)
     {
         old_latforce.resize(GetPlayersCount());
         old_tractionat90.resize(GetPlayersCount());
@@ -503,8 +504,8 @@ void OilEffect()
 
             if (oileffect_init[player - 1] == true)
             {
-                oileffect_latforce[player - 1] -= oileffect_latforce_subtract * GetGameSpeed();
-                oileffect_tractionat90[player - 1] -= oileffect_tractionat90_subtract * GetGameSpeed();
+                oileffect_latforce[player - 1] -= oileffect_latforce_subtract * abs(oileffect_subtract_multiplier) * GetGameSpeed();
+                oileffect_tractionat90[player - 1] -= oileffect_tractionat90_subtract * abs(oileffect_subtract_multiplier) * GetGameSpeed();
 
                 if (oileffect_latforce[player - 1] >= old_latforce[player - 1])
                 {
@@ -546,11 +547,14 @@ void OilEffect()
             }
         }
     }
-    if (GetRaceState() == (BYTE)CDRaceState::Countdown)
+    else if (GetRaceState() == (BYTE)CDRaceState::Countdown)
     {
         LOOP_PLAYERS
         {
-            oileffect_init[player - 1] = false;
+            if (player - 1)
+            {
+                oileffect_init[player - 1] = false;
+            }
         }
     }
 }

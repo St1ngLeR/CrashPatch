@@ -6,6 +6,9 @@
 #include <string>
 #include <thread>
 
+#include <dbghelp.h>
+#pragma comment(lib, "dbghelp.lib")
+
 #include "injector/injector.hpp"
 
 #include "cdmain.h"
@@ -17,6 +20,25 @@
 #include "patch/gameplay.h"
 
 using namespace std::chrono_literals;
+
+LONG WINAPI CrashHandler(EXCEPTION_POINTERS* pExceptionInfo)
+{
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::time_t time_since_epoch = std::chrono::system_clock::to_time_t(now);
+    long long timestamp_int = static_cast<long long>(time_since_epoch);
+    std::string filename = CDDir() + "\\crashpatch_" + std::to_string(timestamp_int) + ".dmp";
+    HANDLE hFile = CreateFile(filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile != INVALID_HANDLE_VALUE)
+    {
+        MINIDUMP_EXCEPTION_INFORMATION minidumpInfo;
+        minidumpInfo.ExceptionPointers = pExceptionInfo;
+        minidumpInfo.ThreadId = GetCurrentThreadId();
+        minidumpInfo.ClientPointers = FALSE;
+        MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpWithFullMemory, &minidumpInfo, NULL, NULL);
+        CloseHandle(hFile);
+    }
+    return EXCEPTION_EXECUTE_HANDLER;
+}
 
 namespace
 {
@@ -61,14 +83,17 @@ namespace
                 auto iniFile = ini::open(configPath.string());
 
                 // Helper lambda to read boolean values (0/1) with default
-                auto readBool = [&](const char* key, bool defaultValue) -> bool {
-                    try {
+                auto readBool = [&](const char* key, bool defaultValue) -> bool
+                {
+                    try
+                    {
                         return iniFile[CONFIG_SECTION].get<int>(key) != 0;
                     }
-                    catch (...) {
+                    catch (...)
+                    {
                         return defaultValue;
                     }
-                    };
+                };
 
                 cfg.playerIdleInPTB = readBool(KEY_PLAYER_IDLE, DEFAULT_DISABLED);
                 cfg.testDriveRespawn = readBool(KEY_TESTDRIVE_RESPAWN, DEFAULT_DISABLED);
@@ -106,6 +131,8 @@ namespace
 
 void Init()
 {
+    //SetUnhandledExceptionFilter(CrashHandler);
+
     // --- One‑time startup ---
     // Write compile‑time hash to memory (original anti‑debug / obfuscation)
     injector::WriteMemory<int>(0x485C86, hashTime(), true);
@@ -115,7 +142,7 @@ void Init()
     PatchConfig cfg = PatchConfig::loadFromFile(configPath);
 
     // Apply one‑time patches
-    skip_intro = cfg.skipTitleScreen;   // assuming global variable
+    skip_intro = cfg.skipTitleScreen; 
 
     if (cfg.showUserNameInMainMenu)
         ShowUserName();
