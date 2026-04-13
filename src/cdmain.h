@@ -3,6 +3,8 @@
 #include <vector>
 #include <math.h>
 #include <random>
+#include <fstream>
+#include <string>
 
 DWORD p_CDDir = 0x7E5FF0;
 DWORD p_CDRender = 0x7CF700;
@@ -372,6 +374,20 @@ float StringToFloat(std::string s)
 	return std::stof(s.c_str());
 }
 
+std::string GetStringSimple(const void* address)
+{
+	const char* ptr = static_cast<const char*>(address);
+	std::string result;
+
+	while (*ptr != '\0')
+	{
+		result.push_back(*ptr);
+		++ptr;
+	}
+
+	return result;
+}
+
 std::string GetString(void* addr)
 {
 	if (addr == nullptr)
@@ -497,12 +513,12 @@ std::string FormatStr(const std::string& text, Args... args)
 
 int GetWindowWidth()
 {
-	return injector::ReadMemory<int>(injector::ReadMemory<DWORD>(0x7CF6FC, true) + 0x250, true);
+	return injector::ReadMemory<int>(injector::ReadMemory<DWORD>(0x7CF6FC, true) + 0x250, false);
 }
 
 int GetWindowHeight()
 {
-	return injector::ReadMemory<int>(injector::ReadMemory<DWORD>(0x7CF6FC, true) + 0x254, true);
+	return injector::ReadMemory<int>(injector::ReadMemory<DWORD>(0x7CF6FC, true) + 0x254, false);
 }
 
 std::string CDDir()
@@ -534,7 +550,7 @@ bool IsServer()
 {
 	if (CDNetwork())
 	{
-		return !injector::ReadMemory<bool>(CDNetwork() + 0x4, true);
+		return !injector::ReadMemory<bool>(CDNetwork() + 0x4, false);
 	}
 }
 
@@ -550,7 +566,7 @@ BYTE GetCurPlayerInMPList()
 {
 	if (CDNetwork())
 	{
-		return injector::ReadMemory<BYTE>(CDNetwork() + 0xC, true);
+		return injector::ReadMemory<BYTE>(CDNetwork() + 0xC, false);
 	}
 }
 
@@ -558,7 +574,7 @@ void SetCurPlayerInMPList(int id)
 {
 	if (CDNetwork())
 	{
-		injector::WriteMemory<BYTE>(CDNetwork() + 0xC, id, true);
+		injector::WriteMemory<BYTE>(CDNetwork() + 0xC, id, false);
 	}
 }
 
@@ -566,7 +582,7 @@ BYTE GetMPPlayersCount()
 {
 	if (CDNetwork())
 	{
-		return injector::ReadMemory<BYTE>(CDNetwork() + 0xE, true);
+		return injector::ReadMemory<BYTE>(CDNetwork() + 0xE, false);
 	}
 }
 
@@ -574,7 +590,7 @@ bool IsVotingForRestart(int id)	// works only for host :(
 {
 	if (CDNetwork())
 	{
-		return injector::ReadMemory<bool>(CDNetwork() + 0xE4 + id, true);
+		return injector::ReadMemory<bool>(CDNetwork() + 0xE4 + id, false);
 	}
 }
 
@@ -582,7 +598,7 @@ bool IsVotingForRaceEnd(int id)	// works only for host :(
 {
 	if (CDNetwork())
 	{
-		return injector::ReadMemory<bool>(CDNetwork() + 0xEC + id, true);
+		return injector::ReadMemory<bool>(CDNetwork() + 0xEC + id, false);
 	}
 }
 
@@ -590,7 +606,7 @@ bool IsRestartComing()	// works only for host :(
 {
 	if (CDNetwork())
 	{
-		return injector::ReadMemory<bool>(CDNetwork() + 0x134, true);
+		return injector::ReadMemory<bool>(CDNetwork() + 0x134, false);
 	}
 }
 
@@ -598,7 +614,7 @@ bool IsRaceEndComing()	// works only for host :(
 {
 	if (CDNetwork())
 	{
-		return injector::ReadMemory<bool>(CDNetwork() + 0x135, true);
+		return injector::ReadMemory<bool>(CDNetwork() + 0x135, false);
 	}
 }
 
@@ -626,7 +642,7 @@ DWORD CDControl()
 
 float GetGameSpeed()
 {
-	return injector::ReadMemory<float>(injector::ReadMemory<DWORD>(0x7DC550, true) + 0x8, true);
+	return injector::ReadMemory<float>(injector::ReadMemory<DWORD>(0x7DC550, true) + 0x8, false);
 }
 
 int GetPlayersCount()
@@ -655,7 +671,7 @@ template <typename T> void SetPlayerParam(CDPlayer param, T value, int id)
 	if (Player(id) != NULL)
 	{
 		//*(T*)(Player(id) + (int)param) = value;
-		injector::WriteMemory<T>(Player(id) + (int)param, value, true);
+		injector::WriteMemory<T>(Player(id) + (int)param, value, false);
 	}
 }
 
@@ -682,7 +698,7 @@ template <typename T> void SetAftburParam(CDAftbur param, T value, int id)
 	if (Aftbur(id) != NULL)
 	{
 		//*(T*)(Aftbur(id) + (int)param) = value;
-		injector::WriteMemory<T>(Aftbur(id) + (int)param, value, true);
+		injector::WriteMemory<T>(Aftbur(id) + (int)param, value, false);
 	}
 }
 
@@ -709,7 +725,7 @@ template <typename T> void SetMinigunParam(CDMinigun param, T value, int id)
 	if (Minigun(id) != NULL)
 	{
 		//*(T*)(Minigun(id) + (int)param) = value;
-		injector::WriteMemory<T>(Minigun(id) + (int)param, value, true);
+		injector::WriteMemory<T>(Minigun(id) + (int)param, value, false);
 	}
 }
 
@@ -733,7 +749,7 @@ template <typename T> void SetCarEngineParam(CDCarEngine param, T value, int id)
 {
 	if (CarEngine(id) != NULL)
 	{
-		injector::WriteMemory<T>(CarEngine(id) + (int)param, value, true);
+		injector::WriteMemory<T>(CarEngine(id) + (int)param, value, false);
 	}
 }
 
@@ -757,16 +773,7 @@ template <typename T> void SetWheelParam(CDWheel param, T value, int player_id, 
 {
 	if (Wheel(player_id, wheel_id) != NULL)
 	{
-		injector::WriteMemory<T>(Wheel(player_id, wheel_id) + (int)param, value, true);
-	}
-}
-
-bool isGamePaused()
-{
-	if (CDRace() != NULL)
-	{
-		//return *(BYTE*)(*(DWORD*)(*(DWORD*)(CDRace() + 0x10) + 0x4) + 0x734);
-		return injector::ReadMemory<BYTE>(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0x4) + 0x734);
+		injector::WriteMemory<T>(Wheel(player_id, wheel_id) + (int)param, value, false);
 	}
 }
 
@@ -774,8 +781,26 @@ DWORD GetRaceHandler()
 {
 	if (CDRace() != NULL)
 	{
-		return (injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0x4));
+		DWORD ptr = injector::ReadMemory<DWORD>(CDRace() + 0x10);
+		if (ptr != 0)
+		{
+			return injector::ReadMemory<DWORD>(ptr + 0x4);
+		}
 	}
+	return 0; 
+}
+
+bool isGamePaused()
+{
+	if (CDRace() != NULL)
+	{
+		DWORD handler = GetRaceHandler();
+		if (handler != 0)
+		{
+			return injector::ReadMemory<BYTE>(handler + 0x734);
+		}
+	}
+	return false; // значение по умолчанию (игра не на паузе)
 }
 
 BYTE GetSpectatorID()
@@ -800,7 +825,7 @@ void SetGameMode(CDGameMode gamemode)
 	if (CDRaceInfo() != NULL)
 	{
 		//*(BYTE*)(CDRaceInfo()) = (BYTE)gamemode;
-		injector::WriteMemory(CDRaceInfo(), gamemode, true);
+		injector::WriteMemory(CDRaceInfo(), gamemode, false);
 	}
 }
 
@@ -827,7 +852,7 @@ void SetEventType(CDEventType event_type)
 	if (CDRaceInfo() != NULL)
 	{
 		//*(BYTE*)(CDRaceInfo() + 0x60) = (BYTE)event_type;
-		injector::WriteMemory(CDRaceInfo() + 0x60, event_type, true);
+		injector::WriteMemory(CDRaceInfo() + 0x60, event_type, false);
 	}
 }
 
@@ -843,7 +868,18 @@ void SetEventTarget(int target)
 {
 	if (CDRaceInfo() != NULL)
 	{
-		injector::WriteMemory(CDRaceInfo() + 0x64, target, true);
+		injector::WriteMemory(CDRaceInfo() + 0x64, target, false);
+	}
+}
+
+DWORD GetRaceCameraHandler()
+{
+	if (CDRace() != NULL)
+	{
+		if (GetRaceState() == (BYTE)CDRaceState::InProcess)
+		{
+			return (injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC));
+		}
 	}
 }
 
@@ -851,9 +887,13 @@ BYTE GetRaceCameraID()
 {
 	if (CDRace() != NULL)
 	{
-		//return *(BYTE*)(*(DWORD*)(*(DWORD*)(CDRace() + 0x10) + 0xC) + 0x8);
-		return injector::ReadMemory<BYTE>(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC) + 0x8);
+		DWORD cameraHandler = GetRaceCameraHandler();
+		if (cameraHandler != 0)
+		{
+			return injector::ReadMemory<BYTE>(cameraHandler + 0x8);
+		}
 	}
+	return 0;
 }
 
 void SetRaceCameraID(CDRaceCamera cam)
@@ -861,7 +901,7 @@ void SetRaceCameraID(CDRaceCamera cam)
 	if (CDRace() != NULL)
 	{
 		//*(BYTE*)(*(DWORD*)(*(DWORD*)(CDRace() + 0x10) + 0xC) + 0x8) = (BYTE)cam;
-		injector::WriteMemory(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC) + 0x8, cam, true);
+		injector::WriteMemory(GetRaceCameraHandler() + 0x8, cam, false);
 	}
 }
 
@@ -870,7 +910,7 @@ BYTE GetRaceCameraAuto()
 	if (CDRace() != NULL)
 	{
 		//return *(BYTE*)(*(DWORD*)(*(DWORD*)(CDRace() + 0x10) + 0xC) + 0x3C);
-		return injector::ReadMemory<BYTE>(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC) + 0x3C);
+		return injector::ReadMemory<BYTE>(GetRaceCameraHandler() + 0x3C);
 	}
 }
 
@@ -879,18 +919,18 @@ void SetRaceCameraAuto(bool is_auto)
 	if (CDRace() != NULL)
 	{
 		//*(BYTE*)(*(DWORD*)(*(DWORD*)(CDRace() + 0x10) + 0xC) + 0x3C) = (BYTE)is_auto;
-		injector::WriteMemory(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC) + 0x3C, is_auto, true);
+		injector::WriteMemory(GetRaceCameraHandler() + 0x3C, is_auto, false);
 	}
 }
 
 float GetFreeTrackCamParam(CDFreeTrackCamCtrl param)
 {
-	return injector::ReadMemory<float>(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC) + (int)param, true);
+	return injector::ReadMemory<float>(GetRaceCameraHandler() + (int)param, false);
 }
 
 void SetFreeTrackCamParam(CDFreeTrackCamCtrl param, float value)
 {
-	injector::WriteMemory(injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(CDRace() + 0x10) + 0xC) + (int)param, value, true);
+	injector::WriteMemory(GetRaceCameraHandler() + (int)param, value, false);
 }
 
 DWORD GetAmbienceSystemPtr()
@@ -905,7 +945,7 @@ BYTE GetGarageColorType()
 {
 	if (*(DWORD*)0x7BC998)
 	{
-		return injector::ReadMemory<BYTE>(injector::ReadMemory<DWORD>(0x7BC998, true) + 0x14, true);
+		return injector::ReadMemory<BYTE>(injector::ReadMemory<DWORD>(0x7BC998, true) + 0x14, false);
 	}
 }
 
@@ -921,7 +961,7 @@ int GetRaceTimer()
 {
 	if (CDRace())
 	{
-		return injector::ReadMemory<int>(CDRace() + 0xC, true);
+		return injector::ReadMemory<int>(CDRace() + 0xC, false);
 	}
 }
 
@@ -1033,9 +1073,9 @@ void ShowHUDUpperMessage(const char* text, int color)
 {
 	if (GetRaceState() != (BYTE)CDRaceState::Finished)
 	{
-		injector::WriteMemory<float>(GetRaceHandler() + 0x72C, 4.f, true);
-		WriteString<uint32_t>(GetRaceHandler() + 0x628, text, true);
-		injector::WriteMemory<int>(GetRaceHandler() + 0x728, color, true);
+		injector::WriteMemory<float>(GetRaceHandler() + 0x72C, 4.f, false);
+		WriteString<uint32_t>(GetRaceHandler() + 0x628, text, false);
+		injector::WriteMemory<int>(GetRaceHandler() + 0x728, color, false);
 	}
 }
 
