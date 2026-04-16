@@ -23,10 +23,13 @@ using namespace std::chrono_literals;
 
 LONG WINAPI CrashHandler(EXCEPTION_POINTERS* pExceptionInfo)
 {
+    std::string dumpPath = CDDir() + "\\minidumps\\";
+    std::filesystem::create_directories(dumpPath);
+
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     std::time_t time_since_epoch = std::chrono::system_clock::to_time_t(now);
     long long timestamp_int = static_cast<long long>(time_since_epoch);
-    std::string filename = CDDir() + "\\minidumps\\crashpatch_" + std::to_string(timestamp_int) + ".dmp";
+    std::string filename = dumpPath + "crashpatch_" + std::to_string(timestamp_int) + ".dmp";
     HANDLE hFile = CreateFile(filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile != INVALID_HANDLE_VALUE)
     {
