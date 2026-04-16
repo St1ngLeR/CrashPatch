@@ -26,7 +26,7 @@ LONG WINAPI CrashHandler(EXCEPTION_POINTERS* pExceptionInfo)
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     std::time_t time_since_epoch = std::chrono::system_clock::to_time_t(now);
     long long timestamp_int = static_cast<long long>(time_since_epoch);
-    std::string filename = CDDir() + "\\crashpatch_" + std::to_string(timestamp_int) + ".dmp";
+    std::string filename = CDDir() + "\\minidumps\\crashpatch_" + std::to_string(timestamp_int) + ".dmp";
     HANDLE hFile = CreateFile(filename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile != INVALID_HANDLE_VALUE)
     {
@@ -34,7 +34,7 @@ LONG WINAPI CrashHandler(EXCEPTION_POINTERS* pExceptionInfo)
         minidumpInfo.ExceptionPointers = pExceptionInfo;
         minidumpInfo.ThreadId = GetCurrentThreadId();
         minidumpInfo.ClientPointers = FALSE;
-        MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpWithFullMemory, &minidumpInfo, NULL, NULL);
+        MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &minidumpInfo, NULL, NULL);
         CloseHandle(hFile);
     }
     return EXCEPTION_EXECUTE_HANDLER;
@@ -94,7 +94,7 @@ namespace
                         return defaultValue;
                     }
                 };
-
+                
                 cfg.playerIdleInPTB = readBool(KEY_PLAYER_IDLE, DEFAULT_DISABLED);
                 cfg.testDriveRespawn = readBool(KEY_TESTDRIVE_RESPAWN, DEFAULT_DISABLED);
                 cfg.skipTitleScreen = readBool(KEY_SKIP_TITLE, DEFAULT_DISABLED);
@@ -131,7 +131,7 @@ namespace
 
 void Init()
 {
-    //SetUnhandledExceptionFilter(CrashHandler);
+    SetUnhandledExceptionFilter(CrashHandler);
 
     // --- One‑time startup ---
     // Write compile‑time hash to memory (original anti‑debug / obfuscation)
@@ -183,6 +183,9 @@ void Init()
     TestDriveTweaks();
     FixDriverModels();
 
+    //AllocConsole();
+    //freopen("CONOUT$", "w", stdout);
+
     // --- Main loop (runs until g_running is set to false) ---
     while (g_running.load(std::memory_order_relaxed))
     {
@@ -223,6 +226,7 @@ void Init()
         NoDamage();
         MPFinishScreen();
         MPKick();
+        //TrkMinimap();
 
         // Sleep to reduce CPU usage. Original was 1ms; increased to 10ms.
         // Adjust based on required responsiveness.

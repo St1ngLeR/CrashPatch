@@ -24,6 +24,7 @@ std::random_device rd;
 
 enum class CDPlayer
 {
+	NumMeshes = 0x108,
 	PosX = 0xB14,
 	PosY = 0xB18,
 	PosZ = 0xB1C,
@@ -37,6 +38,7 @@ enum class CDPlayer
 	DeformFactor = 0x65FC,
 	SteerMultiplier = 0x688C,
 	DamageRealism = 0x6894,
+	CurWheelsAngle = 0x69D8,
 	AftburPtr = 0x6E80,
 	CarEnginePtr = 0x6E78,
 	MinigunPtr = 0x6E7C,
@@ -49,6 +51,8 @@ enum class CDPlayer
 	AI_Debug_TweakFree = 0x3E34F,
 	AutomaticShifting = 0x6888,
 	WheelPtr = 0x68CC,
+	AxleFPtr = 0x6E70,
+	AxleRPtr = 0x6E74,
 	WheelFLPosX = 0x6EC4,
 	WheelFLPosY = 0x6EC8,
 	WheelFLPosZ = 0x6ECC,
@@ -68,7 +72,11 @@ enum class CDPlayer
 	Surface01 = 0x1AA4,
 	Surface02 = 0x1B14,
 	Surface03 = 0x1B84,
-	Surface04 = 0x1BF4
+	Surface04 = 0x1BF4,
+	SpringLoadFL = 0x6A2C,
+	SpringLoadFR = 0x6B94,
+	SpringLoadRL = 0x6CFC,
+	SpringLoadRR = 0x6E64,
 };
 
 enum class CDAftbur
@@ -391,65 +399,55 @@ std::string GetStringSimple(const void* address)
 std::string GetString(void* addr)
 {
 	if (addr == nullptr)
-	{
 		return "";
-	}
 
-	uintptr_t base = reinterpret_cast<uintptr_t>(addr);
+	// Вместо reinterpret_cast<uintptr_t>(addr) читаем значение указателя как uintptr_t из локальной переменной
+	uintptr_t base = injector::ReadMemory<uintptr_t>(&addr);
 
-	auto CanReadAddress = [](void* ptr, size_t size) -> bool {
-		if (ptr == nullptr) return false;
+	const uint32_t MAX_STRING_LENGTH = 1024 * 1024;
 
-		MEMORY_BASIC_INFORMATION mbi;
-		if (VirtualQuery(ptr, &mbi, sizeof(mbi)) == 0)
+	auto IsReadableRange = [](const void* ptr, size_t size) -> bool {
+		if (ptr == nullptr || size == 0)
 			return false;
-
-		if (mbi.Protect == PAGE_NOACCESS ||
-			mbi.Protect == PAGE_EXECUTE ||
-			mbi.Protect & PAGE_GUARD)
-			return false;
-
 		uintptr_t start = reinterpret_cast<uintptr_t>(ptr);
-		uintptr_t end = reinterpret_cast<uintptr_t>(mbi.BaseAddress) + mbi.RegionSize;
-
-		return (start + size <= end);
+		uintptr_t end = start + size;
+		if (end < start)
+			return false;
+		uintptr_t current = start;
+		while (current < end) {
+			MEMORY_BASIC_INFORMATION mbi;
+			if (VirtualQuery(reinterpret_cast<LPCVOID>(current), &mbi, sizeof(mbi)) == 0)
+				return false;
+			if (mbi.Protect == PAGE_NOACCESS ||
+				mbi.Protect == PAGE_EXECUTE ||
+				mbi.Protect & PAGE_GUARD)
+				return false;
+			current = reinterpret_cast<uintptr_t>(mbi.BaseAddress) + mbi.RegionSize;
+		}
+		return true;
 		};
 
-	try
-	{
-		if (!CanReadAddress(reinterpret_cast<void*>(base + 0x8), sizeof(uint32_t)))
-		{
-			return "";
-		}
-
-		uint32_t* p_length = reinterpret_cast<uint32_t*>(base + 0x8);
-		uint32_t length = *p_length;
-
-		if (!CanReadAddress(reinterpret_cast<void*>(base + 0xC), length))
-		{
-			return "";
-		}
-
-		char* p_string_start = reinterpret_cast<char*>(base + 0xC);
-
-		bool has_null_terminator = false;
-		for (uint32_t i = 0; i < length; ++i)
-		{
-			if (p_string_start[i] == '\0')
-			{
-				has_null_terminator = true;
-				length = i;
-				break;
-			}
-		}
-
-		std::string resultstr(p_string_start, length);
-		return resultstr;
-	}
-	catch (...)
-	{
+	uintptr_t lenAddr = base + 0x8;
+	if (!IsReadableRange(reinterpret_cast<void*>(lenAddr), sizeof(uint32_t)))
 		return "";
+
+	uint32_t length = injector::ReadMemory<uint32_t>(lenAddr); // прямое разыменование
+	if (length == 0 || length > MAX_STRING_LENGTH)
+		return "";
+
+	uintptr_t strAddr = base + 0xC;
+	if (!IsReadableRange(reinterpret_cast<void*>(strAddr), length))
+		return "";
+
+	const char* pData = reinterpret_cast<const char*>(strAddr);
+	uint32_t realLen = length;
+	for (uint32_t i = 0; i < length; ++i) {
+		if (pData[i] == '\0') {
+			realLen = i;
+			break;
+		}
 	}
+	return std::string(pData, realLen);
 }
 
 //std::string GetString(void* addr)
@@ -750,6 +748,14 @@ template <typename T> void SetCarEngineParam(CDCarEngine param, T value, int id)
 	if (CarEngine(id) != NULL)
 	{
 		injector::WriteMemory<T>(CarEngine(id) + (int)param, value, false);
+	}
+}
+
+DWORD CarSubmesh(DWORD player, int submesh_index, int offset = 0)
+{
+	if (Player(player) != NULL)
+	{
+		return injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(Player(player) + 0x4) + 0xFC) + (0x314 * submesh_index) + offset;
 	}
 }
 

@@ -549,6 +549,8 @@ void OilEffect()
     }
     else if (GetRaceState() == (BYTE)CDRaceState::Countdown)
     {
+        oileffect_init.resize(GetPlayersCount());
+
         LOOP_PLAYERS
         {
             if (player - 1)
