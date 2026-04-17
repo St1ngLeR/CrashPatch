@@ -1,6 +1,6 @@
 # CrashPatch
 
-<img width="2560" height="800" alt="CrashPatch_Logo" src="https://github.com/user-attachments/assets/05c8ccd4-6a72-4fcf-a75c-8be4a409b17c"/>
+<img alt="CrashPatch_Logo" src="https://github.com/user-attachments/assets/05c8ccd4-6a72-4fcf-a75c-8be4a409b17c"/>
 
 CrashPatch for "classic" Crashday 1.2 is the first release to provide a large number of QoL fixes for the game. CrashPatch solves a wide range of problems, from fixing critical failures, to various major and minor improvements to the game to ensure a comfortable game in modern realities, which makes the choice optimal for both new and old players.
 
