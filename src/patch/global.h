@@ -477,3 +477,14 @@ void DynamicSkyBox()
         WriteMemoryMatrix4x4(CDRender() + 0xFC4, skybox, true);
     }
 }
+
+void ExtendAISetupsLimit()
+{
+    int ai_setup_limit = 65536; // 256 - old value
+
+    injector::WriteMemory(0x5D5C4E, ai_setup_limit, true);
+    injector::WriteMemory(0x5D5C6E, ai_setup_limit, true);
+
+    injector::WriteMemory(0x5D5C44, (ai_setup_limit * 16) + 4, true);
+    injector::WriteMemory(0x5D5C69, (ai_setup_limit * 16) + 4, true);
+}
