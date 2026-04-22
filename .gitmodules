@@ -1,3 +1,6 @@
 [submodule "src/injector"]
 	path = src/injector
 	url = https://github.com/St1ngLeR/injector.git
+[submodule "src/ini"]
+	path = src/ini
+	url = https://github.com/giosali/ini.h.git
