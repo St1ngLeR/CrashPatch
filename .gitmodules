@@ -1,0 +1,3 @@
+[submodule "src/injector"]
+	path = src/injector
+	url = https://github.com/St1ngLeR/injector.git
