@@ -4,3 +4,6 @@
 [submodule "src/ini"]
 	path = src/ini
 	url = https://github.com/giosali/ini.h.git
+[submodule "src/SDK"]
+	path = src/SDK
+	url = https://github.com/St1ngLeR/CrashdaySDK.git
