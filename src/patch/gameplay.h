@@ -1,4 +1,4 @@
-/* Gameplay patches */
+﻿/* Gameplay patches */
 
 float vehicleblast_timer;
 
@@ -307,9 +307,47 @@ void DetachCarPartsPhysics()    // TODO: fix huge FPS drops
     injector::WriteMemory<float>(0x44759C, 1000.f, true);   // increase detached parts lifetime
 }
 
+void __declspec(naked) a_CarSpeedLimiter()
+{
+    __asm
+    {
+        fstp dword ptr [esp + 0x1E0]
+        fmul dword ptr [esp + 0x1E0]
+        fld  dword ptr[ebx + 0x4964]
+        fcomi st(0), st(1)
+        fcmovnb st(0), st(1)
+        fstp st(1)
+        fst  dword ptr[ebx + 0x6EB8]
+
+        push 0x465480
+        retn
+    }
+}
+
+void __declspec(naked) a_CarSpeedLimiter2()
+{
+    __asm
+    {
+        fld dword ptr [ecx + 0x14C] // top speed
+        fld dword ptr [ecx + 0xDC] // current speed
+        fcomi st, st(1)
+        jbe truecond
+        jmp loc_46F009
+
+    truecond:
+        fld1
+        fsub dword ptr [ecx + 0x300]
+        jmp loc_46F009
+
+    loc_46F009:
+        push 0x46F009
+        retn
+    }
+}
+
 void CarSpeedLimiter()
 {
-    if (CDRace())
+    /*if (CDRace())
     {
         LOOP_PLAYERS
         {
@@ -321,7 +359,9 @@ void CarSpeedLimiter()
                 SetPlayerParam(CDPlayer::CarCurSpeed, player_maxspeed, player - 1);
             }
         }
-    }
+    }*/
+    injector::MakeJMP(0x46546C, a_CarSpeedLimiter, true);
+    injector::MakeJMP(0x46F001, a_CarSpeedLimiter2, true);
 }
 
 void DisableCarSpeedHack()
