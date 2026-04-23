@@ -361,7 +361,7 @@ void CarSpeedLimiter()
         }
     }*/
     injector::MakeJMP(0x46546C, a_CarSpeedLimiter, true);
-    injector::MakeJMP(0x46F001, a_CarSpeedLimiter2, true);
+    //injector::MakeJMP(0x46F001, a_CarSpeedLimiter2, true);
 }
 
 void DisableCarSpeedHack()
