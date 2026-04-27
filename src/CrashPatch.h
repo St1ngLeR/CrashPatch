@@ -186,6 +186,7 @@ void Init()
     TestDriveTweaks();
     FixDriverModels();
     ExtendAISetupsLimit();
+    SetupEventTimeSettings();
 
     // --- Main loop (runs until g_running is set to false) ---
     while (g_running.load(std::memory_order_relaxed))

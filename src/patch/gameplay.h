@@ -670,3 +670,505 @@ void FixDriverModels()
 {
     injector::WriteMemory<BYTE>(0x5D62C9, 0xEB, true);
 }
+
+const char* swtTimeOfDay_Name = "swtTimeOfDay";
+uintptr_t swtTimeOfDay_Ptr;
+
+const char* forcetimeofday_var = "forcetimeofday";
+
+void __declspec(naked) a_SwtTimeOfDayDeclr()
+{
+    __asm
+	{
+		call sub_6959C9
+		
+		// declaring the UI elements
+	
+		mov ebx, -1
+		mov edx, dword ptr [swtTimeOfDay_Name]
+		lea eax, [esp + 0x4B0]
+		call sub_69586C
+		mov edx, eax
+		mov eax, ecx
+		call sub_49B170
+		mov ds: [swtTimeOfDay_Ptr], eax
+		xor edx, edx
+		lea eax, [esp + 0x4B0]
+		call sub_6959C9
+	
+		// assigning the functions to the UI elements
+
+		mov ebx, -1
+		mov edx, dword ptr [swtTimeOfDay_Name]
+		lea eax, [esp + 0x4F0]
+		call sub_69586C
+		mov ebx, 0
+		mov edx, eax
+		mov eax, ecx
+		call sub_4A0410
+		mov ds: [swtTimeOfDay_Ptr], eax
+		xor edx, edx
+		lea eax, [esp + 0x4F0]
+		call sub_6959C9
+
+		jmp loc_588AEE
+
+    sub_677C00:
+        push 0x677C00
+        retn
+
+    sub_4B37B0:
+        push 0x4B37B0
+        retn
+
+	sub_695AA9:
+		push 0x695AA9
+		retn
+
+	sub_695DB9:
+		push 0x695DB9
+		retn
+
+	sub_69586C:
+		push 0x69586C
+		retn
+
+	sub_6959C9:
+		push 0x6959C9
+		retn
+
+	sub_49B170:
+		push 0x49B170
+		retn
+
+	loc_588AEE:
+		push 0x588AEE
+		retn
+
+	sub_4A0410:
+		push 0x4A0410
+		retn
+
+	sub_52CE50:
+		push 0x52CE50
+		retn
+
+	sub_539A0F:
+		push 0x539A0F
+		retn
+
+	sub_4AF990:
+		push 0x4AF990
+		retn
+
+	sub_672700:
+		push 0x672700
+		retn
+
+	sub_5E4D20:
+		push 0x5E4D20
+		retn
+	}
+}
+
+const char* Seltrack_Section = "CrashPatch.seltrack";
+const char* DefaultAmb_Key = "DefaultAmbience";
+const char* DefaultAmb_ID = "default";
+
+const char* Settings_Section = "gametext/settings.txt";
+const char* RandomAmb_Key = "RANDOM";
+const char* RandomAmb_ID = "random";
+
+const char* test_amb = "test 123";
+
+int ambsys_ptr;
+
+std::string GetAmbDisplayName(int index)
+{
+    DWORD addr = injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(ambsys_ptr + 0x4) + (0x310 * index));
+    return GetString((void*)addr);
+}
+
+std::string GetAmbFileName(int index)
+{
+    DWORD addr = injector::ReadMemory<DWORD>(injector::ReadMemory<DWORD>(ambsys_ptr + 0x4) + (0x310 * index + 0x10));
+    return GetString((void*)addr);
+}
+
+int g_AmbNameBuffer;
+int g_AmbFileBuffer;
+
+extern "C" const char* __cdecl GetAmbDisplayName_C(int index)
+{
+    static std::string tmp;
+    tmp = GetAmbDisplayName(index);
+    return tmp.c_str();
+}
+
+extern "C" const char* __cdecl GetAmbFileName_C(int index)
+{
+    static std::string tmp;
+    tmp = GetAmbFileName(index);
+    return tmp.c_str();
+}
+
+void __declspec(naked) SetupEventTimeSettings_MainFunc()
+{
+    __asm
+    {
+        call sub_4AF1B0
+
+        mov edx, 18
+        mov eax, ds: [swtTimeOfDay_Ptr]
+        call sub_4B2790
+
+        mov ebx, -1
+		mov edx, 0x6D00D6
+		lea eax, [esp + 0x6F0]
+		call sub_69586C
+		mov ebx, dword ptr [DefaultAmb_Key]
+		mov edx, dword ptr [Seltrack_Section]
+		mov ecx, eax
+		mov eax, ds: [0x7E3110]
+		call sub_66F410
+		mov ebx, -1
+		mov edx, eax
+		lea eax, [esp + 0x6B0]
+		call sub_69586C
+		mov ebx, -1
+		mov edx, dword ptr [DefaultAmb_ID]
+		mov esi, eax
+		lea eax, [esp + 0x690]
+		call sub_69586C
+		mov	edi, ds: [swtTimeOfDay_Ptr]
+		mov ebx, esi
+		mov edx, eax
+		mov eax, edi
+		call sub_4B3460
+		lea eax, [esp + 0x690]
+		xor edx, edx
+		call sub_6959C9
+		lea eax, [esp + 0x6B0]
+		xor edx, edx
+		call sub_6959C9
+		lea eax, [esp + 0x6F0]
+		xor edx, edx
+		call sub_6959C9
+
+        mov ebx, -1
+		mov edx, 0x6D00D6
+		lea eax, [esp + 0x6F0]
+		call sub_69586C
+		mov ebx, dword ptr [RandomAmb_Key]
+		mov edx, dword ptr [Settings_Section]
+		mov ecx, eax
+		mov eax, ds: [0x7E3110]
+		call sub_66F410
+		mov ebx, -1
+		mov edx, eax
+		lea eax, [esp + 0x6B0]
+		call sub_69586C
+		mov ebx, -1
+		mov edx, dword ptr [RandomAmb_ID]
+		mov esi, eax
+		lea eax, [esp + 0x690]
+		call sub_69586C
+		mov	edi, ds: [swtTimeOfDay_Ptr]
+		mov ebx, esi
+		mov edx, eax
+		mov eax, edi
+		call sub_4B3460
+		lea eax, [esp + 0x690]
+		xor edx, edx
+		call sub_6959C9
+		lea eax, [esp + 0x6B0]
+		xor edx, edx
+		call sub_6959C9
+		lea eax, [esp + 0x6F0]
+		xor edx, edx
+		call sub_6959C9
+
+        mov eax, 0x18
+        mov edx, -1
+        call sub_6958F9
+
+        mov [esp+0x288], dx
+        call sub_42F4F0
+        mov ambsys_ptr, eax
+
+        xor ecx, ecx
+        mov esi, eax
+        mov [esp + 0x284], ecx
+
+        mov [esp + 0x300], eax
+        mov cl, byte ptr [eax]
+        movzx ecx, cl
+        xor ebx, ebx
+
+        mov [esp + 0x520], ebx
+        
+    start_loop:
+        cmp ebx, ecx
+        jge end_loop
+        mov [esp + 0x530], ecx
+
+
+        // Display name
+        push [esp + 0x520]
+        call GetAmbDisplayName_C
+        add esp, 4
+
+        mov [g_AmbNameBuffer], eax
+
+        // ID
+        push [esp + 0x520]
+        call GetAmbFileName_C
+        add esp, 4
+
+        mov [g_AmbFileBuffer], eax
+
+        mov ebx, -1
+		mov edx, 0x6D00D6
+		lea eax, [esp + 0x6F0]
+		call sub_69586C
+		mov ecx, eax
+		mov ebx, -1
+		mov edx, [g_AmbNameBuffer]
+		lea eax, [esp + 0x6B0]
+		call sub_69586C
+		mov ebx, -1
+		mov edx, [g_AmbFileBuffer]
+		mov esi, eax
+		lea eax, [esp + 0x690]
+		call sub_69586C
+		mov	edi, ds: [swtTimeOfDay_Ptr]
+		mov ebx, esi
+		mov edx, eax
+		mov eax, edi
+		call sub_4B3460
+		lea eax, [esp + 0x690]
+		xor edx, edx
+		call sub_6959C9
+		lea eax, [esp + 0x6B0]
+		xor edx, edx
+		call sub_6959C9
+		lea eax, [esp + 0x6F0]
+		xor edx, edx
+		call sub_6959C9
+
+        mov ecx, [esp + 0x530]
+		inc [esp + 0x520]
+        mov ebx, [esp + 0x520]
+        jmp start_loop
+
+
+    end_loop:
+        mov ebx, -1
+		mov edx, dword ptr [DefaultAmb_ID]
+		lea eax, [esp+0x530]
+		call sub_69586C
+		mov ecx, ds: [swtTimeOfDay_Ptr]
+		mov edx,eax
+		mov eax,ecx
+		call sub_4B37B0
+		lea eax, [esp+0x530]
+        jmp loc_588F0D
+
+    sub_4B37B0:
+        push 0x4B37B0
+        retn
+
+    sub_66F410:
+        push 0x66F410
+        retn
+
+    sub_431260:
+        push 0x431260
+        retn
+
+    sub_5FA780:
+        push 0x5FA780
+        retn
+
+    sub_6872D0:
+        push 0x6872D0
+        retn
+
+    sub_4B38B0:
+        push 0x4B38B0
+        retn
+
+    sub_431600:
+        push 0x431600
+        retn
+
+    sub_431680:
+        push 0x431680
+        retn
+
+    sub_4B3460:
+        push 0x4B3460
+        retn
+
+    sub_687050:
+        push 0x687050
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    sub_696097:
+        push 0x696097
+        retn
+
+    sub_696365:
+        push 0x696365
+        retn
+
+    sub_42F4F0:
+        push 0x42F4F0
+        retn
+
+    sub_6958F9:
+        push 0x6958F9
+        retn
+
+    sub_4B26F0:
+        push 0x4B26F0
+        retn
+
+    sub_4B2790:
+        push 0x4B2790
+        retn
+
+    sub_4AF1B0:
+        push 0x4AF1B0
+        retn
+
+    loc_588F0D:
+        push 0x588F0D
+        retn
+    }
+}
+
+std::string amb_option = "DEFAULT";
+
+void SetupEventTimeSettings_Apply()
+{
+    int amb_switch_sel = injector::ReadMemory<short>(swtTimeOfDay_Ptr + 0x170);
+
+    if (amb_switch_sel == 0)
+    {
+        amb_option = "DEFAULT";
+    }
+    else if (amb_switch_sel == 1)
+    {
+        amb_option = "RANDOM";
+    }
+    else
+    {
+        amb_option = GetAmbFileName(amb_switch_sel - 2);
+    }
+}
+
+void __declspec(naked) a_SetupEventTimeSettings_Apply()
+{
+    __asm
+    {
+        call SetupEventTimeSettings_Apply
+
+        mov ebx, esp
+        mov edx, ds: [0x7A87F9]
+
+        jmp loc_58A079
+
+    loc_58A079:
+        push 0x58A079
+        retn
+    }
+}
+
+int ambload_ptr;
+
+void SetupEventTimeSettings_ApplyForRace()
+{
+    if (amb_option != "DEFAULT")
+    {
+        CDWriteString(ambload_ptr + 0x50, amb_option);
+    }
+}
+
+int save_this_boy;
+
+void __declspec(naked) a_SetupEventTimeSettings_ApplyForRace()
+{
+    __asm
+    {
+        mov save_this_boy, eax
+        mov ambload_ptr, esp
+        call SetupEventTimeSettings_ApplyForRace
+        mov eax, save_this_boy
+
+        mov ecx, -1
+        jmp loc_63BCDF
+
+    loc_63BCDF:
+        push 0x63BCDF
+        retn
+    }
+}
+
+void SetupEventTimeSettings_ApplyForCareer()
+{
+    auto event_info = ParseEventInfo(GetString(injector::ReadMemory<void*>(0x7A8800)));
+    amb_option = GetStringEventParam(event_info, forcetimeofday_var);
+    if (amb_option.empty())
+    {
+        amb_option = "DEFAULT";
+    }
+}
+
+void __declspec(naked) a_SetupEventTimeSettings_ApplyForCareer()
+{
+    __asm
+    {
+        call sub_6959C9
+        call SetupEventTimeSettings_ApplyForCareer
+        jmp loc_51710E
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    loc_51710E:
+        push 0x51710E
+        retn
+    }
+}
+
+void SetupEventTimeSettings()
+{
+    const char* seltrack_page = "seltrack2.cgf";
+
+    injector::WriteMemory(0x529617, seltrack_page, true);
+    injector::WriteMemory(0x539512, seltrack_page, true);
+    injector::WriteMemory(0x547D2F, seltrack_page, true);
+    injector::WriteMemory(0x564793, seltrack_page, true);
+    injector::WriteMemory(0x564B7C, seltrack_page, true);
+    injector::WriteMemory(0x567AE5, seltrack_page, true);
+    injector::WriteMemory(0x56F4B1, seltrack_page, true);
+    injector::WriteMemory(0x56F4B1, seltrack_page, true);
+
+    injector::MakeJMP(0x588AE9, a_SwtTimeOfDayDeclr);
+    injector::MakeJMP(0x588F08, SetupEventTimeSettings_MainFunc);
+    injector::MakeJMP(0x58A071, a_SetupEventTimeSettings_Apply);
+    injector::MakeJMP(0x63BCDA, a_SetupEventTimeSettings_ApplyForRace);
+    injector::MakeJMP(0x517109, a_SetupEventTimeSettings_ApplyForCareer);
+
+    injector::MakeNOP(0x679C2A, 2); // we need to NOP this instruction to force vertex shadow file always updating (because every ambience has different sun position)
+}

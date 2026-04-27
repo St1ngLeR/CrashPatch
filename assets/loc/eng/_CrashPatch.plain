@@ -3,7 +3,7 @@
 
 Language: eng	# eng, rus, ger
 LanguageName: English	# English, Русский, Deutsch
-Sections: 2
+Sections: 3
 
 #-------------------------------------------------------------------------------------
 SECTION: CrashPatch.hud
@@ -24,3 +24,11 @@ Keys: 1
 ID   btnKickPlayer.Caption
 DESC (Original:) Kick Player
 TEXT Kick Player
+
+#-------------------------------------------------------------------------------------
+SECTION: CrashPatch.seltrack
+Keys: 1
+
+ID   DefaultAmbience
+DESC (Original:) Default
+TEXT Default

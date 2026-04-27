@@ -488,3 +488,9 @@ void ExtendAISetupsLimit()
     injector::WriteMemory(0x5D5C44, (ai_setup_limit * 16) + 4, true);
     injector::WriteMemory(0x5D5C69, (ai_setup_limit * 16) + 4, true);
 }
+
+void ExtendTexturesLimit()
+{
+    injector::WriteMemory<BYTE>(0x5E583E, 0xEB, true);
+    //injector::MakeNOP(0x5E582D, 2, true);   
+}

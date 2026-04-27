@@ -1,0 +1,654 @@
+CrashGUI-File                                          #
+black.tga      		                       # Background picture
+$ID intrface/seltrack.cgf MenuTitle			                       # Title string
+open   					               # "blinds" background type
+default 					       # default group
+0	 			 	               # padding distance of elements to their parent frame (in pixels)
+default       					       # additional left/right padding of elements towards the center of their parent
+
+Next:
+Type: GUILabel	                                       # element type
+Name: lblSelectModeSub                                 # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup label_subcaption
+Text: $ID intrface/seltrack.cgf lblSelectModeSub.Caption                                      # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20 		                                       # x coord
+Y: 70		                                       # y coord
+Width: 100                                             # width ("default" for automatic)
+Height: default
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnQuitMode                                      # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_back
+Text: $ID intrface/seltrack.cgf btnQuitMode.Caption                                             # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20		                                       # x coord
+Y: 440		                                       # y coord
+Width: 110	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnWreckingMatch                                 # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection
+Text: $ID intrface/seltrack.cgf btnWreckingMatch.Caption                                   # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 305		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:
+Type: GUIButton                                        # element type
+Name: btnStuntShow                                     # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf btnStuntShow.Caption                                       # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 375		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnHoldTheFlag                                   # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf btnHoldTheFlag.Caption                                    # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 340		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnRacingEvents                                  # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf btnRacingEvents.Caption	                                    # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 270		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnPassTheBomb                                   # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf btnPassTheBomb.Caption                                    # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 340		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnBombRun                                       # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf btnBombRun.Caption                                         # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 340		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton                                        # element type
+Name: btnTestDrive                                     # element name
+Group: default
+Parent: default
+Style: hidedefaultgroup button_mainselection valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf btnTestDrive.Caption                                       # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 220		                                       # x coord
+Y: 340		                                       # y coord
+Width: 200                                             # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: verybig                                     # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next: 	                                               #
+Type: GUIFrame                                         # element type
+Name: frmInfoMode                                      # element name
+Group: default
+Parent: default
+Style: frame_hud hidedefaultgroup frame_latefadein
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 245		                                       # x coord
+Y: 335		                                       # y coord
+Width: 380	                                       # width ("default" for automatic)
+Height: 50                                             # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default
+
+Next:	                                               #
+Type: GUILabel                                         # element type
+Name: lblInfoMode                                      # element name
+Group: default
+Parent: frmInfoMode
+Style: label_wordwrap hidedefaultgroup noparenthide
+Text: $ID intrface/seltrack.cgf lblInfoMode.Caption                            # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 240		                                       # x coord
+Y: 330		                                       # y coord
+Width: 360                                             # width ("default" for automatic)
+Height: 30                                             # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:
+Type: GUILabel	                                       # element type
+Name: lblModeOptionsSub                                # element name
+Group: modeOptions
+Parent: default
+Style: label_subcaption
+Text: $ID intrface/seltrack.cgf lblModeOptionsSub.Caption                                   # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20 		                                       # x coord
+Y: 70		                                       # y coord
+Width: 100                                             # width ("default" for automatic)
+Height: default
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnQuitModeOptions                               # element name
+Group: modeOptions
+Parent: default
+Style: button_back
+Text: $ID intrface/seltrack.cgf btnQuitModeOptions.Caption                                             # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20		                                       # x coord
+Y: 440		                                       # y coord
+Width: 110	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnToTrackSelection                              # element name
+Group: modeOptions
+Parent: default
+Style: button_accept
+Text: $ID intrface/seltrack.cgf btnToTrackSelection.Caption                                         # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 480		                                       # x coord
+Y: 440		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next: 	                                               #
+Type: GUIFrame                                         # element type
+Name: frmModeOptions                                   # element name
+Group: modeOptions
+Parent: default
+Style: frame_aligntopright
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 150		                                       # x coord
+Y: 100		                                       # y coord
+Width: 320	                                       # width ("default" for automatic)
+Height: 310                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:      	                                       #
+Type: GUISwitch                                        # element type
+Name: swtTimeOfDay                                    # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/trkmodes.cgf swtTimeOfDay.Caption                                    # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 250		                                       # x coord
+Y: 165	                                       # y coord
+Width: 100	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: default                                     # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true
+ShowPictures: false
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions1                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions1.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions2                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions2.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions3                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions3.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions4                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions4.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions5                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions5.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions6                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions6.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions7                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions6.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtModeOptions8                                  # element name
+Group: modeOptions
+Parent: frmModeOptions
+Style: halign_toparent valign_belowlast_fix
+Text: $ID intrface/seltrack.cgf swtModeOptions6.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next:
+Type: GUILabel	                                       # element type
+Name: lblSelTrackSub                                   # element name
+Group: selTrack
+Parent: default
+Style: label_subcaption
+Text: $ID intrface/seltrack.cgf lblSelTrackSub.Caption                                     # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20 		                                       # x coord
+Y: 70		                                       # y coord
+Width: 100                                             # width ("default" for automatic)
+Height: default
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnQuitSelTrack                                  # element name
+Group: selTrack
+Parent: default
+Style: button_back
+Text: $ID intrface/seltrack.cgf btnQuitSelTrack.Caption                                             # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20		                                       # x coord
+Y: 440		                                       # y coord
+Width: 110	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnToQuickRaceGarage                                  # element name
+Group: selTrack
+Parent: default
+Style: button_accept
+Text: $ID intrface/seltrack.cgf btnToQuickRaceGarage.Caption                                         # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 480		                                       # x coord
+Y: 440		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:	                                               # Benutzerliste (TODO: ListBox!!!)
+Type: GUIListBox                                       # element type
+Name: lstNextRaceTrack                                 # element name
+Group: selTrack
+Parent: default
+Style: listbox_loose
+Text: $ID intrface/seltrack.cgf lstNextRaceTrack.Caption                                     # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 60		                                       # x coord
+Y: 100		                                       # y coord
+Width: 250	                                       # width ("default" for automatic)
+Height: 300                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+MaxEntries: 512                                        # Max. 64 Benutzer
+Sort: true	                                       # Sortiere Einträge nach ABC
+
+Next:  	                                       # Benutzerliste (TODO: ListBox!!!)
+Type: GUIPicture                                       # element type
+Name: picNextRaceTrack                                  # element name
+Group: selTrack
+Parent: default
+Style: default
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 99		                                       # x coord
+Y: 41		                                       # y coord
+Width: 542	                                       # width ("default" for automatic)
+Height: 391                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+Picture: misc/trkimg.tga                                   # Bilddatei
+Rendermode: solid                                      #
+Alpha: 1.0                                             #
+
+Next:  	                                       # Benutzerliste (TODO: ListBox!!!)
+Type: GUIPicture                                       # element type
+Name: picNextRaceTrackFadeOut                                  # element name
+Group: selTrack
+Parent: default
+Style: default
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 99		                                       # x coord
+Y: 41		                                       # y coord
+Width: 542	                                       # width ("default" for automatic)
+Height: 391                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+Picture: misc/trkimg.tga                                   # Bilddatei
+Rendermode: solid                                      #
+Alpha: 0.0                                             #
+
+Next: 	                                               #
+Type: GUIFrame                                         # element type
+Name: frmEventTrackInfo                                     # element name
+Group: selTrack
+Parent: default
+Style: frame_latefadein
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 245		                                       # x coord
+Y: 335		                                       # y coord
+Width: 380	                                       # width ("default" for automatic)
+Height: 50                                             # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default
+
+Next:
+Type: GUILabel	                                       # element type
+Name: lblModeCarsSub                                # element name
+Group: modeCars
+Parent: default
+Style: label_subcaption
+Text: $ID intrface/seltrack.cgf lblModeCarsSub.Caption                               # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20 		                                       # x coord
+Y: 70		                                       # y coord
+Width: 100                                             # width ("default" for automatic)
+Height: default
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnQuitCarChoice                               # element name
+Group: modeCars
+Parent: default
+Style: button_back
+Text: $ID intrface/seltrack.cgf btnQuitCarChoice.Caption                                             # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 20		                                       # x coord
+Y: 440		                                       # y coord
+Width: 110	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next:		                                       #
+Type: GUIButton	                                       # element type
+Name: btnFinishCarChoice                              # element name
+Group: modeCars
+Parent: default
+Style: button_accept
+Text: $ID intrface/seltrack.cgf btnFinishCarChoice.Caption                                         # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 480		                                       # x coord
+Y: 440		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: center                                      # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next: 	                                               #
+Type: GUIFrame                                         # element type
+Name: frmModeCars                                   # element name
+Group: modeCars
+Parent: default
+Style: frame_aligntopright
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 150		                                       # x coord
+Y: 100		                                       # y coord
+Width: 320	                                       # width ("default" for automatic)
+Height: 210                                            # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next: 	                                               #
+Type: GUISwitch                                        # element type
+Name: swtNetworkCarClass	# element name
+Group: modeCars
+Parent: frmModeCars
+Style: halign_toparent
+Text: $ID intrface/seltrack.cgf swtNetworkCarClass.Caption                                        # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 50		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+ShowTextNames: true                                    #
+ShowPictures: false                                    #
+Rendermode: solid                                      #
+
+Next: 	                                               #
+Type: GUIButton                                        # element type
+Name: btnSetSpecificNetworkCar                                  # element name
+Group: modeCars
+Parent: default
+Style: button_bottomspecial2
+Text: $ID intrface/seltrack.cgf btnSetSpecificNetworkCar.Caption                            # screen caption ("default" for no text)
+Enabled: 0                                             # enabled? (0 or 1)
+X: 130		                                       # x coord
+Y: 110		                                       # y coord
+Width: 140	                                       # width ("default" for automatic)
+Height: default                                        # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: normal                                      # font type (normal, fat, verybig)
+TextColor: default                                     # rgb text color or "default"
+
+Next: 	                                               #
+Type: GUIFrame                                         # element type
+Name: frmTrackSelInfo                                     # element name
+Group: selTrack
+Parent: default
+Style: frame_hud # latefadein
+Text: default                                          # screen caption ("default" for no text)
+Enabled: 1                                             # enabled? (0 or 1)
+X: 325		                                       # x coord // 275
+Y: 355		                                       # y coord
+Width: 300	                                       # width ("default" for automatic)
+Height: 55                                             # height ("default" for automatic)
+TextAlign: left                                        # text alignment (left, right, center, default)
+TextStyle: fat                                         # font type (normal, fat, verybig)
+TextColor: default
+
