@@ -1151,6 +1151,24 @@ void __declspec(naked) a_SetupEventTimeSettings_ApplyForCareer()
     }
 }
 
+void __declspec(naked) a_SetupEventTimeSettings_ApplyForMiniGames()
+{
+    __asm
+    {
+        call sub_59D340
+        call SetupEventTimeSettings_ApplyForCareer
+        jmp loc_5495DA
+
+    sub_59D340:
+        push 0x59D340
+        retn
+
+    loc_5495DA:
+        push 0x5495DA
+        retn
+    }
+}
+
 void SetupEventTimeSettings()
 {
     const char* seltrack_page = "seltrack2.cgf";
@@ -1169,6 +1187,7 @@ void SetupEventTimeSettings()
     injector::MakeJMP(0x58A071, a_SetupEventTimeSettings_Apply);
     injector::MakeJMP(0x63BCDA, a_SetupEventTimeSettings_ApplyForRace);
     injector::MakeJMP(0x517109, a_SetupEventTimeSettings_ApplyForCareer);
+    injector::MakeJMP(0x5495D5, a_SetupEventTimeSettings_ApplyForMiniGames);
 
     injector::MakeNOP(0x679C2A, 2); // we need to NOP this instruction to force vertex shadow file always updating (because every ambience has different sun position)
 }
