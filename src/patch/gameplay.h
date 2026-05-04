@@ -257,6 +257,237 @@ void __declspec(naked) NoDamageSelect()
     }
 }
 
+void __declspec(naked) NoDamageSelect_MP()
+{
+    __asm
+    {
+        mov ebx, -1
+        mov edx, 0x6D638E
+        lea eax, [esp + 0x160]
+        call sub_69586C
+        mov edx, 0x7A7764
+        mov ebx, eax
+        lea eax, [esp + 0x20]
+        call sub_677C00
+        mov edx, dword ptr [nodamage_value]
+        call sub_696058
+        test eax, eax
+        setne bl
+        xor edx, edx
+        lea eax, [esp + 0x20]
+        call sub_6959C9
+        lea eax, [esp + 0x160]
+        xor edx, edx
+        call sub_6959C9
+        test bl, bl
+        jne truecond
+
+        mov ebx, -1
+        jmp loc_561F4C
+
+    truecond:
+        mov ebx, dword ptr [nodamage_key]
+        mov edx, dword ptr [nodamage_section]
+        mov eax, ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x40]
+        call sub_69586C
+        mov edx,eax
+        mov eax,0x7A7B58
+        call sub_695F1D
+        lea eax,[esp+0x40]
+        xor edx,edx
+        call sub_6959C9
+        jmp loc_562050
+
+    sub_695F1D:
+        push 0x695F1D
+        retn
+
+    sub_66F410:
+        push 0x66F410
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    loc_562050:
+        push 0x562050
+        retn
+
+    sub_696058:
+        push 0x696058
+        retn
+
+    sub_677C00:
+        push 0x677C00
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    loc_561F4C:
+        push 0x561F4C
+        retn
+    }
+}
+
+void __declspec(naked) NoDamageSelect_MP2()
+{
+    __asm
+    {
+        mov ebx, -1
+        mov edx, 0x6D63C1
+        lea eax, [esp + 0x70]
+        call sub_69586C
+        mov edx, 0x7A7764
+        mov ebx, eax
+        lea eax, [esp + 0x80]
+        call sub_677C00
+        mov edx, dword ptr [nodamage_value]
+        call sub_696058
+        test eax, eax
+        setne bl
+        xor edx, edx
+        lea eax, [esp + 0x80]
+        call sub_6959C9
+        lea eax, [esp + 0x70]
+        xor edx, edx
+        call sub_6959C9
+        test bl, bl
+        je end
+        mov ebx, dword ptr [nodamage_key]
+        mov edx, dword ptr [nodamage_section]
+        mov eax, ds: [0x7E3110]
+        call sub_66F410
+        mov ebx, -1
+        mov edx, eax
+        lea eax, [esp + 0xC0]
+        call sub_69586C
+        mov edx, eax
+        mov eax, 0x7A7B58
+        call sub_695F1D
+        lea eax, [esp + 0xC0]
+        jmp loc_565B1B
+
+    end:
+        mov ebx, -1
+        jmp loc_56741F
+
+    sub_66F410:
+        push 0x66F410
+        retn
+
+    sub_696058:
+        push 0x696058
+        retn
+
+    sub_677C00:
+        push 0x677C00
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    sub_695F1D:
+        push 0x695F1D
+        retn
+
+    loc_565B1B:
+        push 0x565B1B
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    loc_56741F:
+        push 0x56741F
+        retn
+    }
+}
+
+void __declspec(naked) NoDamageSelect_MP3()
+{
+    __asm
+    {
+        mov ebx, -1
+        mov edx, 0x6D63C1
+        lea eax, [esp + 0x218]
+        call sub_69586C
+        mov edx, 0x7A7764
+        mov ebx, eax
+        lea eax, [esp + 0x108]
+        call sub_677C00
+        mov edx, dword ptr [nodamage_value]
+        call sub_696058
+        test eax, eax
+        setne bl
+        xor edx, edx
+        lea eax, [esp + 0x108]
+        call sub_6959C9
+        lea eax, [esp + 0x218]
+        xor edx, edx
+        call sub_6959C9
+        test bl, bl
+        je end
+        mov ebx, dword ptr [nodamage_key]
+        mov edx, dword ptr [nodamage_section]
+        mov eax, ds: [0x7E3110]
+        call sub_66F410
+        mov ebx, -1
+        mov edx, eax
+        lea eax, [esp + 0x258]
+        call sub_69586C
+        mov edx, eax
+        mov eax, 0x7A7B58
+        call sub_695F1D
+        lea eax, [esp + 0x258]
+        jmp loc_562BDE
+
+    end:
+        mov ebx, -1
+        jmp loc_563B67
+
+    loc_562BDE:
+        push 0x562BDE
+        retn
+
+    sub_695F1D:
+        push 0x695F1D
+        retn
+
+    sub_66F410:
+        push 0x66F410
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    sub_696058:
+        push 0x696058
+        retn
+
+    sub_677C00:
+        push 0x677C00
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    loc_563B67:
+        push 0x563B67
+        retn
+    }
+}
+
 void VehicleBlastBomb()
 {
     if ((GetGameMode() == (BYTE)CDGameMode::MiniGames) && (GetEventType() == (BYTE)CDEventType::minigame_vehicleblast))
@@ -614,6 +845,10 @@ void NoDamage()
         injector::MakeJMP(0x5835F4, NoDamageSelect, true);
         injector::MakeNOP(0x5DAFBC, 6, true);
         injector::MakeNOP(0x5DAFCC, 6, true);
+
+        injector::MakeJMP(0x561F42, NoDamageSelect_MP, true);
+        injector::MakeJMP(0x56741A, NoDamageSelect_MP2, true);
+        injector::MakeJMP(0x563B62, NoDamageSelect_MP3, true);
 
         NoDamage_init = true;
     }
