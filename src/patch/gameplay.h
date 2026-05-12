@@ -530,6 +530,11 @@ void PTBPlayerIdle()
             injector::WriteMemory<short>(0x448BF7, 0, true);
         }
     }
+    else
+    {
+        injector::WriteMemory(0x448BF3, 0x6E9AB088, true);
+        injector::WriteMemory<short>(0x448BF7, 0, true);
+    }
 }
 
 void DetachCarPartsPhysics()    // TODO: fix huge FPS drops
