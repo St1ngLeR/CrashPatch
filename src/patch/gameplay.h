@@ -619,6 +619,7 @@ void FixAfterRaceFinishPos()
     injector::MakeNOP(0x63E057, 6, true);
     injector::MakeNOP(0x63E866, 3, true);
     injector::MakeNOP(0x63E096, 6, true);
+    injector::MakeNOP(0x63E088, 6, true);
 }
 
 void AftBurParams()
