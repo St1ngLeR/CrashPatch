@@ -1,0 +1,35 @@
+PropsFX-Ambience-File    #
+-                        # name of ambience (overwritten by localized data)
+ambience/def	  	 # texture set for skies/envmap
+253 252 240		 # sun color
+1	 # maximum sunlight strength
+2		 # power exponent of sun light
+246 203 149	 # ambience sky color
+21 25 1		 # ambience ground color
+0 0 0                    # absolute ambience minimum
+225 210 123	 # specular reflection color
+0 0 0 # darker dense vegetation render color (e.g. treetops)
+0 0 0  brighter vegetation render color (e.g. grass)
+0.05 -1.0 0.05            # sun light vector
+0			# additional rotation of sun vector
+1 1 1 1           # screen gamma
+0			 # apply gamma to sky?
+0 0 0 	    	 # texture color filter
+0		 # strength of color filter
+0			 # strength of color filter on car (relative to upper value)
+use_colormap
+3
+0->0 127->128 255->255
+0->0 127->128 255->255
+0->0 127->128 255->255
+150 170 180		 # fog color for looking into normal scenery
+0.0 0.0		         # fog amount (min,max) looking into normal scenery
+150 170 180		 # fog color for looking into sun haze
+0.0 0.0		         # fog amount (min,max) looking into sun haze
+NONE        # environment sound
+0.05 -1.0 0.05            # sunflare vector
+128 128 128              # sunflare color
+100 100                  # sun corona width/height
+0 0 0			 # object shadow color
+0.7			 # max shadow alpha density
+0.25 1.5 1.25 # reflections: min/max/fresnel scaling coefficients
