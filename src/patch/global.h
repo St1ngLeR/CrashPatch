@@ -494,3 +494,54 @@ void ExtendTexturesLimit()
     injector::WriteMemory<BYTE>(0x5E583E, 0xEB, true);
     //injector::MakeNOP(0x5E582D, 2, true);   
 }
+
+void FixMenuAmb()
+{
+    injector::WriteMemory<BYTE>(0x50E492, 0x9E, true);
+    injector::WriteMemory<BYTE>(0x50E497, 0xA2, true);
+    injector::WriteMemory<BYTE>(0x50E49C, 0xA6, true);
+}
+
+const char* garage_amb = "garage.amb.special";
+
+void __declspec(naked) a_CustomizableGarageAmb()
+{
+    __asm
+    {
+        mov eax, [ebp + 0xBA]
+        cmp byte ptr [eax + 0x14], 1
+        jz loc_50E436
+        mov ebx, -1
+        mov edx, garage_amb
+        lea eax, [ebp + 0x9E]
+        call sub_69586C
+        lea edx, [ebp - 0x342]
+        call sub_42DEC0
+        lea eax, [ebp + 0x9E]
+        xor edx, edx
+        call sub_6959C9
+
+        jmp loc_50E436
+
+    loc_50E436:
+        push 0x50E436
+        retn
+
+    sub_42DEC0:
+        push 0x42DEC0
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+    }
+}
+
+void CustomizableGarageAmb()
+{
+    injector::MakeJMP(0x50E379, a_CustomizableGarageAmb, true);
+}

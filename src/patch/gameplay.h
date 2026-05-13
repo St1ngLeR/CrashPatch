@@ -19,11 +19,11 @@ bool RandomNumPlates_init;
 const char* oileffect_key = "OILWARNING";
 const char* oileffect_section = "gametext/hud.txt";
 
-std::vector<float> old_latforce;
-std::vector<float> old_tractionat90;
-std::vector<bool> oileffect_init;
-std::vector<float> oileffect_latforce;
-std::vector<float> oileffect_tractionat90;
+float old_latforce[255] = { 0 };
+float old_tractionat90[255] = { 0 };
+float oileffect_latforce[255] = { 0 };
+float oileffect_tractionat90[255] = { 0 };
+bool oileffect_init[255] = { false };
 
 float oileffect_latforce_subtract = 0.5f;
 float oileffect_tractionat90_subtract = 0.05f;
@@ -756,12 +756,6 @@ void OilEffect()
 {
     if (GetRaceState() == (BYTE)CDRaceState::InProcess)
     {
-        old_latforce.resize(GetPlayersCount());
-        old_tractionat90.resize(GetPlayersCount());
-        oileffect_latforce.resize(GetPlayersCount());
-        oileffect_tractionat90.resize(GetPlayersCount());
-        oileffect_init.resize(GetPlayersCount());
-
         LOOP_PLAYERS
         {
             if ((GetPlayerParam<BYTE>((CDPlayer)((int)CDPlayer::Surface01 + 0x1), player - 1) == 2) ||
@@ -826,14 +820,9 @@ void OilEffect()
     }
     else if (GetRaceState() == (BYTE)CDRaceState::Countdown)
     {
-        oileffect_init.resize(GetPlayersCount());
-
         LOOP_PLAYERS
         {
-            if (player - 1)
-            {
-                oileffect_init[player - 1] = false;
-            }
+            oileffect_init[player - 1] = false;
         }
     }
 }
