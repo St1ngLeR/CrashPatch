@@ -545,3 +545,26 @@ void CustomizableGarageAmb()
 {
     injector::MakeJMP(0x50E379, a_CustomizableGarageAmb, true);
 }
+
+void __declspec(naked) a_SecretBonusCash()
+{
+    __asm
+    {
+        cmp byte ptr [esp + 0x80], 1
+        jne skip
+        add ecx, dword ptr [edi + 0x4C]
+
+    skip:
+        cmp byte ptr [esp + 0x84], 0
+        jmp loc_57178C
+
+    loc_57178C:
+        push 0x57178C
+        retn
+    }
+}
+
+void SecretBonusCash()
+{
+    injector::MakeJMP(0x571784, a_SecretBonusCash, true);
+}

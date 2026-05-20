@@ -822,6 +822,11 @@ void OilEffect()
     {
         LOOP_PLAYERS
         {
+            SetPlayerParam<BYTE>((CDPlayer)((int)CDPlayer::Surface01 + 0x1), 0, player - 1);
+            SetPlayerParam<BYTE>((CDPlayer)((int)CDPlayer::Surface02 + 0x1), 0, player - 1);
+            SetPlayerParam<BYTE>((CDPlayer)((int)CDPlayer::Surface03 + 0x1), 0, player - 1);
+            SetPlayerParam<BYTE>((CDPlayer)((int)CDPlayer::Surface04 + 0x1), 0, player - 1);
+
             oileffect_init[player - 1] = false;
         }
     }
