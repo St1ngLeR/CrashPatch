@@ -3,7 +3,7 @@
 
 Language: rus	# eng, rus, ger
 LanguageName: Русский	# English, Русский, Deutsch
-Sections: 3
+Sections: 4
 
 #-------------------------------------------------------------------------------------
 SECTION: CrashPatch.hud
@@ -32,3 +32,27 @@ Keys: 1
 ID   DefaultAmbience
 DESC (Original:) Default
 TEXT По умолчанию
+
+#-------------------------------------------------------------------------------------
+SECTION: CrashPatch.career
+Keys: 5
+
+ID   DIALOG_EVENTREQUIRESCLASSE
+DESC (Original:) You are not allowed to participate in this event!|To participate you must use a \3class E\d car.
+TEXT Ты не допущен к участию в этом соревновании!|Для участия необходимо использовать машину \3класса E\d.
+
+ID   DIALOG_EVENTREQUIRESCLASSD
+DESC (Original:) You are not allowed to participate in this event!|To participate you must use a \3class D\d car.
+TEXT Ты не допущен к участию в этом соревновании!|Для участия необходимо использовать машину \3класса D\d.
+
+ID   DIALOG_EVENTREQUIRESCLASSC
+DESC (Original:) You are not allowed to participate in this event!|To participate you must use a \3class C\d car.
+TEXT Ты не допущен к участию в этом соревновании!|Для участия необходимо использовать машину \3класса C\d.
+
+ID   DIALOG_EVENTREQUIRESCLASSB
+DESC (Original:) You are not allowed to participate in this event!|To participate you must use a \3class B\d car.
+TEXT Ты не допущен к участию в этом соревновании!|Для участия необходимо использовать машину \3класса B\d.
+
+ID   DIALOG_EVENTREQUIRESCLASSA
+DESC (Original:) You are not allowed to participate in this event!|To participate you must use a \3class A\d car.
+TEXT Ты не допущен к участию в этом соревновании!|Для участия необходимо использовать машину \3класса A\d.

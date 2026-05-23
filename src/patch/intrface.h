@@ -417,3 +417,369 @@ void DisableRpmtexDependency()
     injector::WriteMemory<short>(0x671176, 0xDB31, true);
     injector::MakeNOP(0x671178, 3, true);
 }
+
+void TypoFix_WreckPerfectWin()
+{
+    injector::WriteMemory(0x486B92, 0x6B72CD, true);
+}
+
+const char* career_section = "CrashPatch.career";
+const char* dlgreqclassa_key = "DIALOG_EVENTREQUIRESCLASSA";
+const char* dlgreqclassb_key = "DIALOG_EVENTREQUIRESCLASSB";
+const char* dlgreqclassc_key = "DIALOG_EVENTREQUIRESCLASSC";
+const char* dlgreqclassd_key = "DIALOG_EVENTREQUIRESCLASSD";
+const char* dlgreqclasse_key = "DIALOG_EVENTREQUIRESCLASSE";
+
+void __declspec(naked) a_EventParticipationCond()
+{
+    __asm
+    {
+        mov eax, ds: [0x7EA2CC]
+        mov esi, ds: [0x78E7BC]
+        mov dl, ds: [0x78E778]
+        mov eax, ds: [eax+0xC]
+        call sub_68D7E0 // eax - current career event
+
+        cmp byte ptr [eax + 0x20], 0    // event participation condition
+        jne eventcond
+        jmp skip
+
+    eventcond:
+        cmp byte ptr [eax + 0x20], 1    // requiresclass
+        je eventcond_requiresclass
+        jmp skip
+
+    eventcond_requiresclass:
+        lea ecx, [eax + 0x24]
+
+        mov edx, 0x702B7A   // a
+        mov eax, ecx
+        call sub_696058
+        test eax, eax
+        jne dlg_requiresclass_a
+
+        mov edx, 0x702B7C   // b
+        mov eax, ecx
+        call sub_696058
+        test eax, eax
+        jne dlg_requiresclass_b
+
+        mov edx, 0x702B7E   // c
+        mov eax, ecx
+        call sub_696058
+        test eax, eax
+        jne dlg_requiresclass_c
+
+        mov edx, 0x702B80   // d
+        mov eax, ecx
+        call sub_696058
+        test eax, eax
+        jne dlg_requiresclass_d
+
+        mov edx, 0x702B82   // e
+        mov eax, ecx
+        call sub_696058
+        test eax, eax
+        jne dlg_requiresclass_e
+
+        jmp skip
+
+    dlg_requiresclass_a:
+        mov eax, ds: [0x7DE710]
+        mov eax, ds: [eax + 0x8]
+        cmp byte ptr [eax + 0x4908], 0x8
+        je skip
+        jmp dlg_requiresclass_a_fin
+
+    dlg_requiresclass_a_fin:
+        push 00
+        mov ebx,0x6D6E5C
+        mov edx,0x6D6E5F
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x64]
+        call sub_69586C
+        mov ebx, dlgreqclassa_key
+        mov edx, career_section
+        mov ecx,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x54]
+        call sub_69586C
+        mov ebx,0x6D6E90
+        mov edx, 0x6D6E96
+        mov esi,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x44]
+        call sub_69586C
+        mov edi,ds: [0x78D65C]
+        mov ebx,esi
+        mov edx,eax
+        mov eax,edi
+        call sub_4A4A70
+        lea eax,[esp+0x40]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x50]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x60]
+        xor edx,edx
+        call sub_6959C9
+
+        jmp end
+
+    dlg_requiresclass_b:
+        mov eax, ds: [0x7DE710]
+        mov eax, ds: [eax + 0x8]
+        cmp byte ptr [eax + 0x4908], 0x6
+        je skip
+        jmp dlg_requiresclass_b_fin
+
+    dlg_requiresclass_b_fin:
+        push 00
+        mov ebx,0x6D6E5C
+        mov edx,0x6D6E5F
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x64]
+        call sub_69586C
+        mov ebx, dlgreqclassb_key
+        mov edx, career_section
+        mov ecx,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x54]
+        call sub_69586C
+        mov ebx,0x6D6E90
+        mov edx, 0x6D6E96
+        mov esi,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x44]
+        call sub_69586C
+        mov edi,ds: [0x78D65C]
+        mov ebx,esi
+        mov edx,eax
+        mov eax,edi
+        call sub_4A4A70
+        lea eax,[esp+0x40]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x50]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x60]
+        xor edx,edx
+        call sub_6959C9
+
+        jmp end
+            
+    dlg_requiresclass_c:
+        mov eax, ds: [0x7DE710]
+        mov eax, ds: [eax + 0x8]
+        cmp byte ptr [eax + 0x4908], 0x4
+        je skip
+        jmp dlg_requiresclass_c_fin
+
+    dlg_requiresclass_c_fin:
+        push 00
+        mov ebx,0x6D6E5C
+        mov edx,0x6D6E5F
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x64]
+        call sub_69586C
+        mov ebx, dlgreqclassc_key
+        mov edx, career_section
+        mov ecx,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x54]
+        call sub_69586C
+        mov ebx,0x6D6E90
+        mov edx, 0x6D6E96
+        mov esi,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x44]
+        call sub_69586C
+        mov edi,ds: [0x78D65C]
+        mov ebx,esi
+        mov edx,eax
+        mov eax,edi
+        call sub_4A4A70
+        lea eax,[esp+0x40]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x50]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x60]
+        xor edx,edx
+        call sub_6959C9
+
+        jmp end
+            
+    dlg_requiresclass_d:
+        mov eax, ds: [0x7DE710]
+        mov eax, ds: [eax + 0x8]
+        cmp byte ptr [eax + 0x4908], 0x2
+        je skip
+        jmp dlg_requiresclass_d_fin
+
+    dlg_requiresclass_d_fin:
+        push 00
+        mov ebx,0x6D6E5C
+        mov edx,0x6D6E5F
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x64]
+        call sub_69586C
+        mov ebx, dlgreqclassd_key
+        mov edx, career_section
+        mov ecx,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x54]
+        call sub_69586C
+        mov ebx,0x6D6E90
+        mov edx, 0x6D6E96
+        mov esi,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x44]
+        call sub_69586C
+        mov edi,ds: [0x78D65C]
+        mov ebx,esi
+        mov edx,eax
+        mov eax,edi
+        call sub_4A4A70
+        lea eax,[esp+0x40]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x50]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x60]
+        xor edx,edx
+        call sub_6959C9
+
+        jmp end
+
+    dlg_requiresclass_e:
+        mov eax, ds: [0x7DE710]
+        mov eax, ds: [eax + 0x8]
+        cmp byte ptr [eax + 0x4908], 0x0
+        je skip
+        jmp dlg_requiresclass_e_fin
+
+    dlg_requiresclass_e_fin:
+        push 00
+        mov ebx,0x6D6E5C
+        mov edx,0x6D6E5F
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x64]
+        call sub_69586C
+        mov ebx, dlgreqclasse_key
+        mov edx, career_section
+        mov ecx,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x54]
+        call sub_69586C
+        mov ebx,0x6D6E90
+        mov edx, 0x6D6E96
+        mov esi,eax
+        mov eax,ds: [0x7E3110]
+        call sub_66F410
+        mov ebx,-1
+        mov edx,eax
+        lea eax,[esp+0x44]
+        call sub_69586C
+        mov edi,ds: [0x78D65C]
+        mov ebx,esi
+        mov edx,eax
+        mov eax,edi
+        call sub_4A4A70
+        lea eax,[esp+0x40]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x50]
+        xor edx,edx
+        call sub_6959C9
+        lea eax,[esp+0x60]
+        xor edx,edx
+        call sub_6959C9
+
+        jmp end
+
+    end:
+        push 0x5154D6
+        retn
+
+    skip:
+        mov ebx, -1
+        push 0x514FF0
+        retn
+
+    sub_68D7E0:
+        push 0x68D7E0
+        retn
+
+    sub_696058:
+        push 0x696058
+        retn
+
+    sub_66F410:
+        push 0x66F410
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    sub_4A4A70:
+        push 0x4A4A70
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+    }
+}
+
+void EventParticipationCond()
+{
+    injector::MakeJMP(0x514FEB, a_EventParticipationCond, true);
+}

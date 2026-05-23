@@ -570,8 +570,3 @@ void SecretBonusCash()
 {
     injector::MakeJMP(0x571784, a_SecretBonusCash, true);
 }
-
-void TypoFix_WreckPerfectWin()
-{
-    injector::WriteMemory(0x486B92, 0x6B72CD, true);
-}
