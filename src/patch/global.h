@@ -552,6 +552,8 @@ void __declspec(naked) a_SecretBonusCash()
     {
         cmp byte ptr [esp + 0x80], 1
         jne skip
+        cmp byte ptr [edi + 0xE2], 0
+        jne skip
         add ecx, dword ptr [edi + 0x4C]
 
     skip:
@@ -567,4 +569,9 @@ void __declspec(naked) a_SecretBonusCash()
 void SecretBonusCash()
 {
     injector::MakeJMP(0x571784, a_SecretBonusCash, true);
+}
+
+void TypoFix_WreckPerfectWin()
+{
+    injector::WriteMemory(0x486B92, 0x6B72CD, true);
 }
