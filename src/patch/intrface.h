@@ -246,7 +246,7 @@ void IntroMenu()
         {
             intro = injector::ReadMemory<float>(injector::ReadMemory<DWORD>(0x78D65C) + 0x284);
 
-            if (KeyPress(0x1C))
+            if (KeyPress(0x1C) || KeyPress(0xDF))
             {
                 injector::WriteMemory(injector::ReadMemory<DWORD>(0x78D65C, true) + 0x284, -0.5f, true);
                 intro_anim = true;

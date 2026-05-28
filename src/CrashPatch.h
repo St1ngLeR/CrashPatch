@@ -21,6 +21,8 @@
 
 using namespace std::chrono_literals;
 
+HMODULE g_hModule = nullptr;
+
 LONG WINAPI CrashHandler(EXCEPTION_POINTERS* pExceptionInfo)
 {
     std::string dumpPath = CDDir() + "\\minidumps\\";
@@ -141,7 +143,10 @@ void Init()
     injector::WriteMemory<int>(0x485C86, hashTime(), true);
 
     // Load configuration from INI file
-    std::filesystem::path configPath = std::filesystem::current_path() / "CrashPatch.ini";
+    wchar_t modulePath[MAX_PATH];
+    GetModuleFileNameW(g_hModule, modulePath, MAX_PATH);
+    std::filesystem::path moduleDir = std::filesystem::path(modulePath).parent_path();
+    std::filesystem::path configPath = moduleDir / "CrashPatch.ini";
     PatchConfig cfg = PatchConfig::loadFromFile(configPath);
 
     // Apply one‑time patches

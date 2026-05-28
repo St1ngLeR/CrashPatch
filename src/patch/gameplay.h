@@ -911,6 +911,8 @@ uintptr_t swtTimeOfDay_Ptr;
 
 const char* forcetimeofday_var = "forcetimeofday";
 
+int ambload_ptr;
+
 void __declspec(naked) a_SwtTimeOfDayDeclr()
 {
     __asm
@@ -1014,8 +1016,6 @@ const char* Settings_Section = "gametext/settings.txt";
 const char* RandomAmb_Key = "RANDOM";
 const char* RandomAmb_ID = "random";
 
-const char* test_amb = "test 123";
-
 int ambsys_ptr;
 
 std::string GetAmbDisplayName(int index)
@@ -1043,7 +1043,7 @@ extern "C" const char* __cdecl GetAmbDisplayName_C(int index)
 extern "C" const char* __cdecl GetAmbFileName_C(int index)
 {
     static std::string tmp;
-    tmp = GetAmbFileName(index);
+    tmp = GetAmbFileName(index).data();
     return tmp.c_str();
 }
 
@@ -1198,6 +1198,8 @@ void __declspec(naked) SetupEventTimeSettings_MainFunc()
 
 
     end_loop:
+        //call FreeCurAmbMemory
+
         mov ebx, -1
 		mov edx, dword ptr [DefaultAmb_ID]
 		lea eax, [esp+0x530]
@@ -1297,17 +1299,20 @@ void SetupEventTimeSettings_Apply()
 {
     int amb_switch_sel = injector::ReadMemory<short>(swtTimeOfDay_Ptr + 0x170);
 
-    if (amb_switch_sel == 0)
+    if (!CDRace())
     {
-        amb_option = "DEFAULT";
-    }
-    else if (amb_switch_sel == 1)
-    {
-        amb_option = "RANDOM";
-    }
-    else
-    {
-        amb_option = GetAmbFileName(amb_switch_sel - 2);
+        if (amb_switch_sel == 0)
+        {
+            amb_option = "DEFAULT";
+        }
+        else if (amb_switch_sel == 1)
+        {
+            amb_option = "RANDOM";
+        }
+        else
+        {
+            amb_option = GetAmbFileName(amb_switch_sel - 2).data();
+        }
     }
 }
 
@@ -1328,13 +1333,11 @@ void __declspec(naked) a_SetupEventTimeSettings_Apply()
     }
 }
 
-int ambload_ptr;
-
 void SetupEventTimeSettings_ApplyForRace()
 {
     if (amb_option != "DEFAULT")
     {
-        CDWriteString(ambload_ptr + 0x50, amb_option);
+        AllocString(ambload_ptr + 0x50, amb_option);
     }
 }
 
@@ -1406,6 +1409,8 @@ void __declspec(naked) a_SetupEventTimeSettings_ApplyForMiniGames()
 
 void SetupEventTimeSettings()
 {
+    amb_option.reserve(8192);
+
     const char* seltrack_page = "seltrack2.cgf";
 
     injector::WriteMemory(0x529617, seltrack_page, true);

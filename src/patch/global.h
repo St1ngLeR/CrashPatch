@@ -10,17 +10,13 @@ bool SaveContentUnlimit_init;
 
 BYTE sound_slots = 128;
 
-std::string ambsound/*(64, '\0')*/;
+std::string ambsound;
 
 int is_ambsound_playing = 0;
 int is_ambsound_looped = 0;
 int ambsound_to_load = 0;
 
-bool EnvSound_init;
-
-DWORD p_ambfile;
-std::string ambfile/*(1024, '\0')*/;
-std::string ambfile_path;
+int p_ambsound;
 
 std::string GetExeDirectory()
 {
@@ -57,30 +53,13 @@ void __declspec(naked) a_EnvSoundHandler()
         mov byte ptr[is_ambsound_looped], 1
         jmp loc_5B5589
 
-        loop_zero :
+    loop_zero:
         mov byte ptr[is_ambsound_looped], 0
-            jmp loc_5B5589
+        jmp loc_5B5589
 
-            loc_5B5589 :
+    loc_5B5589:
         push 0x5B5589
-            retn
-    }
-}
-
-void __declspec(naked) a_AmbienceFileName()  // a very-very-very hacky way to get ambience filename pointer
-{
-    __asm
-    {
-        mov p_ambfile, ecx
-        mov ecx, [esi]
-            mov edx, eax
-                mov eax, ecx
-
-                jmp loc_63BCF6
-
-                loc_63BCF6 :
-            push 0x63BCF6
-                retn
+        retn
     }
 }
 
@@ -152,18 +131,36 @@ void __declspec(naked) a_EnvSound()
     }
 }
 
+void __declspec(naked) a_GetEnvSound()
+{
+    __asm
+    {
+        xor ebx, ebx
+
+        mov eax, [eax + 0x300]
+        mov p_ambsound, eax
+
+        lea eax, [esp + 0x54]
+        jmp loc_43147C
+
+    loc_43147C:
+        push 0x43147C
+        retn
+    }
+}
+
 void __declspec(naked) a_CrshPath()
 {
     __asm
     {
         mov esi, dword ptr ds : [crshpath]
-            /*mov eax, esi*/
+        /*mov eax, esi*/
 
-            jmp finish
+        jmp finish
 
-                finish :
-            push 0x672303
-                retn
+    finish:
+        push 0x672303
+        retn
     }
 }
 
@@ -194,31 +191,31 @@ void __declspec(naked) a_VignetteDuringGameplay()
         fadd dword ptr[eax + 0x1C]
         mov ebx, 1
         fstp dword ptr[esp]
-            mov edx, 0x6E3301   // gfx/camera.tga
-                push 0x0C0000000
-                mov eax, ds: [0x7CF700]
-                push 0x0C0000000
-                call sub_60F0A0
+        mov edx, 0x6E3301   // gfx/camera.tga
+        push 0x0C0000000
+        mov eax, ds: [0x7CF700]
+        push 0x0C0000000
+        call sub_60F0A0
 
-                mov eax, [esp + 0x110]
+        mov eax, [esp + 0x110]
 
-                jmp loc_5A4528
+        jmp loc_5A4528
 
-                sub_5A9880 :
-            push 0x5A9880
-                retn
+    sub_5A9880:
+        push 0x5A9880
+        retn
 
-                sub_5EA350 :
-            push 0x5EA350
-                retn
+    sub_5EA350:
+        push 0x5EA350
+        retn
 
-                sub_60F0A0 :
-            push 0x60F0A0
-                retn
+    sub_60F0A0:
+        push 0x60F0A0
+        retn
 
-                loc_5A4528 :
-            push 0x5A4528
-                retn
+    loc_5A4528:
+        push 0x5A4528
+        retn
     }
 }
 
@@ -324,75 +321,22 @@ void SaveContentUnlimit()
 
 void EnvSound()
 {
-    if (EnvSound_init == false)
+    ambsound.reserve(8192);
+
+    injector::MakeJMP(0x5B5583, a_EnvSoundHandler, true);
+    injector::MakeJMP(0x431476, a_GetEnvSound, true);
+
+    ambsound = GetString((void*)p_ambsound).data();
+    std::transform(ambsound.begin(), ambsound.end(), ambsound.begin(), ::tolower);
+    if (ambsound == "none")
     {
-        ambsound.reserve(8192);
-        ambfile.reserve(8192);
-        ambfile_path.reserve(8192);
-
-        injector::MakeJMP(0x5B5583, a_EnvSoundHandler, true);
-        injector::MakeJMP(0x63BCF0, a_AmbienceFileName, true);
-
-        EnvSound_init = true;
+        injector::WriteMemory(0x5A3F75, 0x05FE66E8, true);
+        injector::WriteMemory<BYTE>(0x5A3F79, 0, true);
     }
-    try
+    else
     {
-        if (GetRaceState() != 0)
-        {
-            ambfile = GetString((void*)p_ambfile);
-
-            if (!ambfile.empty())
-            {
-                if (!CDDir().empty())
-                {
-                    ambfile_path = (CDDir() + "\\textures\\ambience\\" + ambfile);
-
-                    if (std::filesystem::exists(ambfile_path))
-                    {
-                        if (ambsound_to_load == 0)
-                        {
-                            ambsound = GetAmbEnvSoundFilePath(ambfile_path);
-                            ambsound_to_load = 1;
-                        }
-
-                        if (!ambsound.empty())
-                        {
-                            if (std::filesystem::exists(CDDir() + "\\sounds\\" + ambsound))
-                            {
-                                injector::MakeJMP(0x5A3F75, a_EnvSound, true);
-                            }
-                            else
-                            {
-                                injector::WriteMemory(0x5A3F75, 0x05FE66E8, true);
-                                injector::WriteMemory<BYTE>(0x5A3F79, 0, true);
-                            }
-                        }
-                        else
-                        {
-                            ambsound_to_load = 0;
-                        }
-                    }
-                    else
-                    {
-                        ambsound_to_load = 0;
-                    }
-                }
-                else
-                {
-                    ambsound_to_load = 0;
-                }
-            }
-            else
-            {
-                ambsound_to_load = 0;
-            }
-        }
-        else
-        {
-            ambsound_to_load = 0;
-        }
+        injector::MakeJMP(0x5A3F75, a_EnvSound, true);
     }
-    catch (...) {}
 }
 
 void SoundSlotsFix()    // TODO
