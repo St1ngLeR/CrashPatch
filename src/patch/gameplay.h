@@ -1431,3 +1431,49 @@ void SetupEventTimeSettings()
 
     injector::MakeNOP(0x679C2A, 2); // we need to NOP this instruction to force vertex shadow file always updating (because every ambience has different sun position)
 }
+
+void __declspec(naked) a_MissileCapacity()
+{
+    __asm
+    {
+        lea eax, [esp + 0x530]
+        call sub_695B53
+        call sub_6960F0
+        mov [ebp + 0x6600], eax
+
+        jmp loc_45FE67
+
+    loc_45FE67:
+        push 0x45FE67
+        retn
+
+    sub_695B53:
+        push 0x695B53
+        retn
+
+    sub_6960F0:
+        push 0x6960F0
+        retn
+    }
+}
+
+void __declspec(naked) a_MissileCapacity2()
+{
+    __asm
+    {
+        mov[esi + 0x6838], ebp
+        mov[esi + 0x7310], ebp
+
+        jmp loc_46493B
+
+    loc_46493B:
+        push 0x46493B
+        retn
+    }
+}
+
+void MissileCapacity()
+{
+    injector::MakeJMP(0x45FE5D, a_MissileCapacity);
+    injector::MakeJMP(0x464935, a_MissileCapacity2);
+}
