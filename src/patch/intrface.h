@@ -408,14 +408,13 @@ void FixCrash_TrackEditorHiddenTileSelect()
 
 void DisableRpmtexDependency()
 {
-    injector::WriteMemory(0x5A5DA9, 0x02C1E9, true);
-    injector::WriteMemory<BYTE>(0x5A5DAD, 0, true);
-    injector::MakeNOP(0x5A5DAE, 4, true);
-
-    injector::MakeNOP(0x64FDD1, 5, true);
-
-    injector::WriteMemory<short>(0x671176, 0xDB31, true);
-    injector::MakeNOP(0x671178, 3, true);
+    injector::WriteMemory<int>(0x5A5E16, 0x024BE9, true);
+    injector::WriteMemory<short>(0x5A5E19, 0, true);
+    injector::WriteMemory<short>(0x5A5BF1, 0x73EB, true);
+    injector::WriteMemory<short>(0x5A5F0B, 0x7DEB, true);
+    injector::MakeNOP(0x5A6061, 5, true);
+    injector::MakeNOP(0x5A5D3E, 5, true);
+    injector::MakeNOP(0x5A606A, 5, true);
 }
 
 void TypoFix_WreckPerfectWin()

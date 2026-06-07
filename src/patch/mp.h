@@ -33,6 +33,8 @@ std::string dlg_kick_text;
 
 bool mplobby_init;
 
+int player_to_kick;
+
 void __declspec(naked) MPVoting_btns()
 {
     __asm
@@ -285,28 +287,55 @@ void MPFinishScreen()
     }
     else
     {
-        injector::MakeNOP(0x64F413, 5, true);
+        if (GetCurOverlayMenu() == 3)
+        {
+            injector::MakeNOP(0x64F413, 5, true);
+        }
+        else
+        {
+            injector::WriteMemory(0x64F413, 0xF64C98E8, true);
+            injector::WriteMemory<BYTE>(0x64F417, 0xFF, true);
+        }
     }
 }
+
+void KickPlayerButton2()
+{
+    KickPlayer(player_to_kick);
+}
+
 
 void __declspec(naked) KickPlayerButton_func()
 {
     __asm
     {
-        push ecx
+    //    push ecx
+    //    cmp dl, 8
+    //    jne end
+    //    call GetCurPlayerInMPList
+    //    push eax
+    //    call KickPlayer
+    //    add esp, 4
+
+    //    sub ds: [0x7A7758], 1
+
+    //    jmp end
+
+    //end:
+    //    pop ecx
+    //    retn
+
+        pushad
+
         cmp dl, 8
-        jne end
-        call GetCurPlayerInMPList
-        push eax
-        call KickPlayer
-        add esp, 4
+        jne skip
 
-        sub ds: [0x7A7758], 1
+        call KickPlayerButton2
 
-        jmp end
+        //add esp,4
 
-    end:
-        pop ecx
+    skip:
+        popad
         retn
     }
 }
@@ -371,86 +400,7 @@ void __declspec(naked) KickPlayerButton()
         pop esi
         pop ecx
         pop ebx
-        ret
-
-        /*push 0
-        mov ebx, 0x6E1963
-        mov edx, 0x6E1966
-        mov eax, ds: [0x7E3110]
-        call sub_66F410
-        mov ebx, -1
-        mov edx, eax
-        lea eax, [esp + 0x14]
-        call sub_69586C
-        mov ebx, 0x6E197B
-        push eax
-        mov edx, 0x6E197F
-        mov eax, ds: [0x7E3110]
-        call sub_66F410
-        mov ebx, -1
-        mov edx, eax
-        lea eax, [esp + 0x58]
-        call sub_69586C
-
-        mov ebx, -1
-        mov edx, dlg_kick_section
-        mov ecx, eax
-        call sub_69586C
-
-        //mov ebx, dlg_kick_section   // LOBBYKICKPLAYERCONFIRM
-        //mov edx, dlg_kick_key   // gametext/netlobby.txt
-        //mov ecx, eax
-        //mov eax, ds: [0x7E3110]
-        //call sub_66F410
-
-        //call GetCurPlayerInMPList // I can't make this shit works
-        //mov edx, 0  
-        //shl edx, 6
-        //add edx, 0x7A77C8
-        //add edx, 4
-        //mov ecx, edx
-        //call sub_695B53
-
-        //push eax  // this as well
-        //push 0
-        //push dlg_kick_section
-        //push dlg_kick_key
-        //mov ecx, ds: [0x7E3110]
-        //push ecx
-        //call sub_66F850
-
-        mov ebx, -1
-        mov edx, eax
-        lea eax, [esp + 0x48]
-        call sub_69586C
-        mov ebx, -1
-        mov edx, 0x6E19B2
-        mov esi, eax
-        lea eax, [esp + 0x28]
-        call sub_69586C
-        mov edi, ds: [0x78D65C]
-        mov ebx, esi
-        mov edx, eax
-        mov eax, edi
-        call sub_4A4D00
-        lea eax, [esp + 0x20]
-        xor edx, edx
-        call sub_6959C9
-        lea eax, [esp + 0x40]
-        xor edx, edx
-        call sub_6959C9
-        lea eax, [esp + 0x50]
-        xor edx, edx
-        call sub_6959C9
-        lea eax, [esp + 0x10]
-        xor edx, edx
-        call sub_6959C9
-        add esp, 0xA0
-        pop edi
-        pop esi
-        pop ecx
-        pop ebx
-        retn*/
+        retn
 
     end:
         add esp, 0x40
@@ -533,6 +483,85 @@ void __declspec(naked) a_mplobby_init3()
     }
 }
 
+void __declspec(naked) a_mplobby_init4()
+{
+    __asm
+    {
+        mov byte ptr[mplobby_init], 0
+        mov eax, 1
+        jmp loc_560BFB
+
+    loc_560BFB:
+        push 0x560BFB
+        retn
+    }
+}
+
+void MPKick_MainFunc()
+{
+    if (mplobby_init)
+    {
+        dlg_kick_no = LocStr("gametext/general.txt", "NO");
+        dlg_kick_yes = LocStr("gametext/general.txt", "YES");
+        dlg_kick_text = FormatStr(LocStr("gametext/netlobby.txt", "LOBBYKICKPLAYERCONFIRM"), GetMPPlayerName(player_to_kick));
+
+        if (injector::ReadMemory<DWORD>(btn_kick_ptr, true))
+        {
+            injector::WriteMemory(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x50, KickPlayerButton, true);
+            if (IsServer())
+            {
+                if (player_to_kick == 0)    // the host can't kick itself
+                {
+                    injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
+                }
+                else
+                {
+                    injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 1, true);
+                }
+
+                if (KeyPress(0xC8) || KeyPress(0xEC))
+                {
+                    if (player_to_kick != 0)
+                    {
+                        player_to_kick--;
+                    }
+                }
+                if (KeyPress(0xD0) || KeyPress(0xED))
+                {
+                    if (player_to_kick < GetMPPlayersCount() - 1)
+                    {
+                        player_to_kick++;
+                    }
+                }
+
+                if (player_to_kick > GetMPPlayersCount() - 1)
+                {
+                    player_to_kick = GetMPPlayersCount() - 1;
+                }
+            }
+            else
+            {
+                injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
+            }
+        }
+    }
+}
+
+void __declspec(naked) a_mplobby_kick()
+{
+    __asm
+    {
+        mov eax, player_to_kick
+        mov [esp + 0x4B0], eax
+
+        jmp loc_5655D0
+
+    loc_5655D0:
+        push 0x5655D0
+        retn
+    }
+}
+
 void MPKick()
 {
     dlg_kick_no.reserve(8192);
@@ -580,56 +609,9 @@ void MPKick()
     injector::MakeJMP(0x564E38, a_mplobby_init1, true);
     injector::MakeJMP(0x5679DD, a_mplobby_init2, true);
     injector::MakeJMP(0x567748, a_mplobby_init3, true);
+    injector::MakeJMP(0x560BF6, a_mplobby_init4, true);
 
-    if (CDNetwork())
-    {
-        //printf("%x - %s\n", (0x7A77C8 + (0x40 * GetCurPlayerInMPList()) + 4), GetMPPlayerName(GetCurPlayerInMPList()));
+    injector::MakeJMP(0x5655C9, a_mplobby_kick, true);
 
-        dlg_kick_no = LocStr("gametext/general.txt", "NO");
-        dlg_kick_yes = LocStr("gametext/general.txt", "YES");
-        dlg_kick_text = FormatStr(LocStr("gametext/netlobby.txt", "LOBBYKICKPLAYERCONFIRM"), GetMPPlayerName(GetCurPlayerInMPList()));
-
-        if (mplobby_init == true) /*if (GetInterfacePage() == gui_mplobby)*/
-        {
-            if (injector::ReadMemory<DWORD>(btn_kick_ptr, true))
-            {
-                injector::WriteMemory(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x50, KickPlayerButton, true);
-                if (IsServer())
-                {
-                    if (GetCurPlayerInMPList() == 0)    // the host can't kick itself
-                    {
-                        injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
-                    }
-                    else
-                    {
-                        injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 1, true);
-                    }
-
-                    if (KeyPress(0xC8) || KeyPress(0xEC))
-                    {
-                        if (GetCurPlayerInMPList() != 0)
-                        {
-                            SetCurPlayerInMPList(GetCurPlayerInMPList() - 1);
-                        }
-                    }
-                    if (KeyPress(0xD0) || KeyPress(0xED))
-                    {
-                        if (GetCurPlayerInMPList() < GetMPPlayersCount() - 1)
-                        {
-                            SetCurPlayerInMPList(GetCurPlayerInMPList() + 1);
-                        }
-                    }
-
-                    if (GetCurPlayerInMPList() > GetMPPlayersCount() - 1)
-                    {
-                        SetCurPlayerInMPList(GetMPPlayersCount() - 1);
-                    }
-                }
-                else
-                {
-                    injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
-                }
-            }
-        }
-    }
+    injector::WriteMemory(0x564158, MPKick_MainFunc, true);
 }
