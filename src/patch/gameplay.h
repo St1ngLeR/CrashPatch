@@ -1333,8 +1333,23 @@ void __declspec(naked) a_SetupEventTimeSettings_Apply()
     }
 }
 
+void SetupEventTimeSettings_ApplyForCareer()
+{
+    auto event_info = ParseEventInfo(GetString(injector::ReadMemory<void*>(0x7A8800)));
+    amb_option = GetStringEventParam(event_info, forcetimeofday_var);
+    if (amb_option.empty())
+    {
+        amb_option = "DEFAULT";
+    }
+}
+
 void SetupEventTimeSettings_ApplyForRace()
 {
+    if (!IsServer())
+    {
+        SetupEventTimeSettings_ApplyForCareer();
+    }
+
     if (amb_option != "DEFAULT")
     {
         AllocString(ambload_ptr + 0x50, amb_option);
@@ -1358,16 +1373,6 @@ void __declspec(naked) a_SetupEventTimeSettings_ApplyForRace()
     loc_63BCDF:
         push 0x63BCDF
         retn
-    }
-}
-
-void SetupEventTimeSettings_ApplyForCareer()
-{
-    auto event_info = ParseEventInfo(GetString(injector::ReadMemory<void*>(0x7A8800)));
-    amb_option = GetStringEventParam(event_info, forcetimeofday_var);
-    if (amb_option.empty())
-    {
-        amb_option = "DEFAULT";
     }
 }
 
@@ -1407,6 +1412,34 @@ void __declspec(naked) a_SetupEventTimeSettings_ApplyForMiniGames()
     }
 }
 
+void SetupEventTimeSettings_SetForMP()
+{
+    std::string event_info = GetString(injector::ReadMemory<void*>(0x7A8800));
+    event_info += " " + (std::string)forcetimeofday_var + "=" + amb_option;
+    AllocString(0x7A8800, event_info);
+}
+
+void __declspec(naked) a_SetupEventTimeSettings_SetForMP()
+{
+    __asm
+    {
+        call sub_57D6C0
+
+        call SetupEventTimeSettings_Apply
+        call SetupEventTimeSettings_SetForMP
+
+        jmp loc_589949
+
+    sub_57D6C0:
+        push 0x57D6C0
+        retn
+
+    loc_589949:
+        push 0x589949
+        retn
+    }
+}
+
 void SetupEventTimeSettings()
 {
     amb_option.reserve(8192);
@@ -1428,6 +1461,7 @@ void SetupEventTimeSettings()
     injector::MakeJMP(0x63BCDA, a_SetupEventTimeSettings_ApplyForRace);
     injector::MakeJMP(0x517109, a_SetupEventTimeSettings_ApplyForCareer);
     injector::MakeJMP(0x5495D5, a_SetupEventTimeSettings_ApplyForMiniGames);
+    injector::MakeJMP(0x589944, a_SetupEventTimeSettings_SetForMP);
 
     injector::MakeNOP(0x679C2A, 2); // we need to NOP this instruction to force vertex shadow file always updating (because every ambience has different sun position)
 }
