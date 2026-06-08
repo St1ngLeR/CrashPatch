@@ -542,6 +542,7 @@ void MPKick_MainFunc()
             else
             {
                 injector::WriteMemory<BYTE>(injector::ReadMemory<DWORD>(btn_kick_ptr, true) + 0x54, 0, true);
+                player_to_kick = GetCurPlayerInMPList();
             }
         }
     }

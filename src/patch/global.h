@@ -14,7 +14,6 @@ std::string ambsound;
 
 int is_ambsound_playing = 0;
 int is_ambsound_looped = 0;
-int ambsound_to_load = 0;
 
 int p_ambsound;
 
@@ -145,6 +144,26 @@ void __declspec(naked) a_GetEnvSound()
 
     loc_43147C:
         push 0x43147C
+        retn
+    }
+}
+
+void __declspec(naked) a_EnvSoundResetInMPVote()
+{
+    __asm
+    {
+        mov byte ptr [is_ambsound_playing], 0
+        lea eax, [esp + 0x4]
+        call sub_69598E
+
+        jmp loc_6474F3
+
+    loc_6474F3:
+        push 0x6474F3
+        retn
+
+    sub_69598E:
+        push 0x69598E
         retn
     }
 }
@@ -325,6 +344,7 @@ void EnvSound()
 
     injector::MakeJMP(0x5B5583, a_EnvSoundHandler, true);
     injector::MakeJMP(0x431476, a_GetEnvSound, true);
+    injector::MakeJMP(0x6474EA, a_EnvSoundResetInMPVote, true);
 
     ambsound = GetString((void*)p_ambsound).data();
     std::transform(ambsound.begin(), ambsound.end(), ambsound.begin(), ::tolower);
