@@ -78,6 +78,7 @@ void __declspec(naked) a_CarColorSlider()
     {
         mov ds: 0x795D1C, ah
         mov ds: 0x79620A, ah
+        mov ds: 0x796209, ah
         jmp loc_52CE96
 
     loc_52CE96:
