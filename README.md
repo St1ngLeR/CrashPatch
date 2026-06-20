@@ -8,6 +8,10 @@ CrashPatch for "classic" Crashday 1.2 is the first release to provide a large nu
 
 Changes marked with ⚙️ can be configured/toggled via the INI file. These options are enabled by default unless stated otherwise.
 
+- Implemented customizable garage ambience.
+- Implemented changeable time settings for single & career events.
+- Implemented aborting / restarting the race after finishing in multiplayer for host.
+- Added "Kick player" feature in the multiplayer lobby.
 - ⚙️ Added rotating animation for skybox (can be enabled in the config).
 - The game now shows screen vignette (filter) during regular gameplay.
 - Skipped "Press ENTER to continue..." in the event loading screen.
