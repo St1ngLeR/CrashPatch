@@ -618,14 +618,42 @@ void DisableCarSpeedHack()
     }
 }
 
+void __declspec(naked) a_PosFix()
+{
+    __asm
+    {
+        je truecond
+        jmp loc_63E05D
+
+    truecond:
+        mov eax, ds: [0x78CEE0]
+        mov ebx, ecx
+        mov eax, [ebx + eax + 4]
+
+        cmp byte ptr[eax + 0x96CC], 0    // has finished the race?
+        je loc_63E148
+        jmp loc_63E05D
+
+    loc_63E148:
+        push 0x63E148
+        retn
+
+    loc_63E05D:
+        push 0x63E05D
+        retn
+    }
+}
+
 void FixAfterRaceFinishPos()
 {
-    injector::MakeNOP(0x63E87D, 4, true);
-    injector::MakeNOP(0x63E057, 6, true);
-    injector::MakeNOP(0x63E866, 3, true);
+    injector::MakeNOP(0x63E5E7, 6, true);
     injector::MakeNOP(0x63E096, 6, true);
-    injector::MakeNOP(0x63E088, 6, true);
+
+    injector::MakeJMP(0x63E057, a_PosFix, true);
+    
+    injector::WriteMemory<float>(0x6F31AD, 100000.f, true); // The solution for incorrect position after a long race (16 min. or above) is such a meme lmao. For the better scenario it must have a completely new logic for determining cars position on finish but it's too high for me tbh.
 }
+
 
 void AftBurParams()
 {
@@ -1510,4 +1538,48 @@ void MissileCapacity()
 {
     injector::MakeJMP(0x45FE5D, a_MissileCapacity);
     injector::MakeJMP(0x464935, a_MissileCapacity2);
+}
+
+const char* hiddenopps_var = "hiddenopps";
+
+int numplayers;
+int numplayers_new;
+
+void HiddenOpps()
+{
+    numplayers = injector::ReadMemory<BYTE>(CDRaceInfo() + 0x7C, true) + 1;
+
+    if (!IsReplayOnly())
+    {
+        if (GetEventType() < (BYTE)CDEventType::testdrive_default)
+        {
+            if (GetRaceTimer() > 10)
+            {
+                auto event_info = ParseEventInfo(GetString(injector::ReadMemory<void*>(0x7A8800)));
+                int hiddenopps_option = GetIntEventParam(event_info, hiddenopps_var);
+
+                numplayers_new = numplayers - hiddenopps_option;
+
+                if (numplayers_new < 1)
+                {
+                    numplayers_new = 1;
+                }
+
+                injector::WriteMemory<BYTE>(0x78CEDC, numplayers_new, true);
+            }
+        }
+    }
+}
+
+void FixCrash_MissileAmmo()
+{
+    injector::WriteMemory<short>(0x4497F8, 0x0AEB, true);
+}
+
+void SwitchToSpectator()
+{
+    injector::MakeNOP(0x64FC95, 6, true);
+    injector::MakeNOP(0x64FCFE, 2, true);
+    injector::WriteMemory<short>(0x64F2F7, 0x3DEB, true);
+    injector::WriteMemory<float>(0x5A4787, 460.f, true);
 }

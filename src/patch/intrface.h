@@ -783,3 +783,140 @@ void EventParticipationCond()
 {
     injector::MakeJMP(0x514FEB, a_EventParticipationCond, true);
 }
+
+const char* speedmode_cp_key = "CPX";
+const char* speedmode_cp_section = "CrashPatch.speedmode";
+
+void __declspec(naked) a_BombRunHUD2()
+{
+    __asm
+    {
+        jne loc_5B25FA
+
+        mov eax, ds: [0x7CF700]
+        call sub_5EA350
+        fld dword ptr [eax+0x1C]
+        mov eax,[esp+0x90]
+        mov eax,[eax+0x195]
+        sar eax,0x18
+        lea edx,[eax*8]
+        fadd dword ptr ds: [0x6E4B0A]
+        mov eax,ds: [0x78CEE0]
+        fadd dword ptr ds: [0x6E4B0E]
+        mov eax,[edx+eax]
+        fstp dword ptr [esp+0x38]
+        call sub_5DA0E0
+        call sub_5061B0
+        push 00
+        push 0x3F800000
+        fld dword ptr [esp+0x40]
+        push 0x42960000
+        fadd dword ptr ds: [0x6E4B12]
+        sub esp,0x4
+        fstp dword ptr [esp]
+        push 0x41A00000
+        push [esp+0x4C]
+        mov edx,eax
+        call sub_4A7710
+
+    //    mov eax, ds: [0x7E3110]
+    //    mov edi, 0x7CCA30
+
+    //    mov ebx, speedmode_cp_key
+    //    mov esi, eax
+    //    mov edx, speedmode_cp_section
+    //    push edi
+
+    //strloop:
+    //    mov al, [esi]
+    //    mov [edi], al
+    //    cmp al,00
+    //    je next
+    //    mov al,[esi+01]
+    //    add esi,02
+    //    mov [edi+01],al
+    //    add edi,02
+    //    cmp al,00
+    //    jne strloop
+
+    //next:
+    //    pop edi
+    //    mov eax, ds: [0x7E3110]
+    //    call sub_66F410
+    //    mov ebx,-1
+    //    mov edx,eax
+    //    lea eax,[esp+0x8]
+    //    call sub_69586C
+    //    mov edx,eax
+    //    mov eax,0x7CC980
+    //    call sub_695F1D
+    //    lea eax,[esp+0x8]
+    //    xor edx,edx
+    //    mov edi,0x7CCA30
+    //    call sub_6959C9
+    //    mov eax,0x7CC980
+    //    mov ecx,ds: [0x7CC988]
+    //    call sub_695F89
+    //    mov esi,eax
+    //    push edi
+    //    mov eax,ecx
+    //    shr ecx,02
+    //    repne movsd 
+    //    mov cl,al
+    //    and cl,03
+    //    repne movsb 
+    //    pop edi
+
+
+        jmp loc_5B1FFC
+
+    sub_695F89:
+        push 0x695F89
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    sub_695F1D:
+        push 0x695F1D
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+
+    sub_66F410:
+        push 0x66F410
+        retn
+
+    sub_4A7710:
+        push 0x4A7710
+        retn
+
+    sub_5061B0:
+        push 0x5061B0
+        retn
+
+    sub_5DA0E0:
+        push 0x5DA0E0
+        retn
+
+    sub_5EA350:
+        push 0x5EA350
+        retn
+
+    loc_5B25FA:
+        push 0x5B25FA
+        retn
+
+    loc_5B1FFC:
+        push 0x5B1FFC
+        retn
+    }
+}
+
+void BombRunHUD2()
+{
+    injector::MakeJMP(0x5B1FF6, a_BombRunHUD2, true);
+}
