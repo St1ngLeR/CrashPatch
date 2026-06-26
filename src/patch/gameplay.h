@@ -1576,10 +1576,256 @@ void FixCrash_MissileAmmo()
     injector::WriteMemory<short>(0x4497F8, 0x0AEB, true);
 }
 
+float spec_arrow_size = 8.f;
+float spec_arrow_posy = 452.f;
+float spec_arrow_l_rot = -64.f;
+float spec_arrow_r_rot = 64.f;
+float spec_arrow_l_posx;
+float spec_arrow_r_posx;
+float spec_arrow_xoffset = 100.f;
+
+void __declspec(naked) a_SpectatorArrowBtns()
+{
+    __asm
+    {
+        mov eax, ds: [0x78D5F0]
+        mov eax, [esp + 0x110]
+        cmp byte ptr [eax + 0x734], 0
+        je truecond_first
+        jmp loc_5A4016
+
+    truecond_first:
+        mov eax, ds: [0x78D5F0]
+        cmp byte ptr [eax + 0x15], 0
+        je truecond
+
+        mov eax, ds: [0x7CF700]
+        call sub_5EA350
+        fld dword ptr [eax + 0x1C]
+        fmul ds: [0x6E3336]
+
+        fld st(0)
+        fsub dword ptr [spec_arrow_xoffset]
+        fstp dword ptr[spec_arrow_l_posx]
+
+        fadd dword ptr [spec_arrow_xoffset]
+        fstp dword ptr [spec_arrow_r_posx]
+
+        push 0
+        push 0x3F800000
+        push spec_arrow_size
+        push spec_arrow_l_rot
+        push spec_arrow_posy
+        push spec_arrow_l_posx
+        mov al, 1
+        call sub_4A7E10
+
+        push 0
+        push 0x3F800000
+        push spec_arrow_size
+        push spec_arrow_r_rot
+        push spec_arrow_posy
+        push spec_arrow_r_posx
+        mov al, 1
+        call sub_4A7E10
+
+    truecond:
+        mov eax, [esp + 0x110]
+
+        jmp loc_5A4016
+
+    sub_5EA350:
+        push 0x5EA350
+        retn
+
+    sub_4A7E10:
+        push 0x4A7E10
+        retn
+
+    loc_5A4016:
+        push 0x5A4016
+        retn
+    }
+}
+
+float spec_playername_posy_1 = 445.f;
+float spec_playername_posy_2 = 460.f;
+
+float spec_playername_posy;
+
+
+void __declspec(naked) a_SpectatorPlayerName()
+{
+    __asm
+    {
+        mov edx, ds: [0x78D5F0]
+        cmp byte ptr [edx + 0xAE], 1
+        je truecond
+        push spec_playername_posy_1
+        jmp loc_5A478B
+
+    truecond:
+        push spec_playername_posy_2
+        jmp loc_5A478B
+
+    loc_5A478B:
+        push 0x5A478B
+        retn
+    }
+}
+
+void __declspec(naked) a_SpectatorRace()
+{
+    __asm
+    {
+        mov eax, ds: [0x78D5F0]
+        mov al, [eax]
+        cmp al, 3   // Race
+        je loc_64F336
+
+        mov eax, ds: [0x78CEE0]
+        jmp loc_64F2E8
+
+    loc_64F2E8:
+        push 0x64F2E8
+        retn
+
+    loc_64F336:
+        push 0x64F336
+        retn
+    }
+}
+
+void __declspec(naked) a_SpectatorControls()
+{
+    __asm
+    {
+        mov edx, 0xCD   // ARROW RIGHT
+        mov eax, ds: [0x78D5F4]
+        call sub_490D70
+        test al, al
+        je check_left
+        mov edx, 0xCD   // ARROW RIGHT
+        jmp loc_64F36E
+
+    check_left:
+        mov edx, 0xCB   // ARROW LEFT
+        mov eax, ds: [0x78D5F4]
+        call sub_490D70
+        test al, al
+        je loc_64ED99
+        mov edx, 0xCB   // ARROW LEFT
+        mov eax, ds: [0x78D5F4]
+        call sub_491010
+        mov eax, [esi + 0x10]
+        call sub_63CB30
+        call sub_5A6130
+        movsx edx, al
+        mov eax, ds: [0x78CED9]
+        sar eax, 0x18
+        dec eax
+        cmp edx, 0
+        je falsecond
+        mov eax, [esi + 0x10]
+        call sub_63CB30
+        call sub_5A6130
+        dec al
+        movsx edx, al
+        mov eax, [esi + 0x10]
+        call sub_63CB30
+        call sub_5A5DA0
+        mov eax, [esi + 0x10]
+        call sub_63CB30
+        call sub_5A6130
+        movsx eax, al
+        lea edx, [eax * 8 + 00000000]
+        mov eax, ds: [0x78CEE0]
+        mov edx, [edx + eax + 0x4]
+        mov eax, [esi + 0x10]
+        call sub_63CB50
+        call sub_431E30
+        add esp, 0x1A4
+        pop ebp
+        pop edi
+        pop esi
+        pop edx
+        pop ecx
+        pop ebx
+        ret
+
+    falsecond:
+        mov eax,[esi+0x10]
+        mov edx, ds: [0x78CED9]
+        sar edx, 0x18
+        dec edx
+        call sub_63CB30
+        call sub_5A5DA0
+        mov edx, ds: [0x78CEE0]
+        mov eax,[esi+0x10]
+        mov ebx, ds: [0x78CED9]
+        sar ebx, 0x18
+        dec ebx
+        mov edx,[edx + 0x08 * ebx + 0x04]
+        call sub_63CB50
+        call sub_431E30
+        add esp,0x1A4
+        pop ebp
+        pop edi
+        pop esi
+        pop edx
+        pop ecx
+        pop ebx
+        ret 
+
+    sub_431E30:
+        push 0x431E30
+        retn
+
+    sub_63CB50:
+        push 0x63CB50
+        retn
+
+    sub_5A5DA0:
+        push 0x5A5DA0
+        retn
+
+    sub_5A6130:
+        push 0x5A6130
+        retn
+
+    sub_63CB30:
+        push 0x63CB30
+        retn
+
+    sub_491010:
+        push 0x491010
+        retn
+
+    loc_64F36E:
+        push 0x64F36E
+        retn
+
+    loc_64ED99:
+        push 0x64ED99
+        retn
+
+    sub_490D70:
+        push 0x490D70
+        retn
+
+    loc_64F373:
+        push 0x64F373
+        retn
+    }
+}
+
 void SwitchToSpectator()
 {
     injector::MakeNOP(0x64FC95, 6, true);
     injector::MakeNOP(0x64FCFE, 2, true);
-    injector::WriteMemory<short>(0x64F2F7, 0x3DEB, true);
-    injector::WriteMemory<float>(0x5A4787, 460.f, true);
+    injector::MakeJMP(0x64F2E3, a_SpectatorRace, true);
+    injector::MakeJMP(0x5A4786, a_SpectatorPlayerName, true);
+
+    injector::MakeJMP(0x5A400F, a_SpectatorArrowBtns, true);
+    injector::MakeJMP(0x64F352, a_SpectatorControls, true);
 }
