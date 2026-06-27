@@ -1829,3 +1829,34 @@ void SwitchToSpectator()
     injector::MakeJMP(0x5A400F, a_SpectatorArrowBtns, true);
     injector::MakeJMP(0x64F352, a_SpectatorControls, true);
 }
+
+void __declspec(naked) a_DisableCarHorn()
+{
+    __asm
+    {
+        cmp dword ptr [eax + 0x6EBC], 0
+        jne falsecond
+        retn
+
+    falsecond:
+        push ebx
+        push ecx
+        push edx
+        push 0
+        jmp loc_43E1B5
+
+    loc_43E1B5:
+        push 0x43E1B5
+        retn
+    }
+}
+
+void DisableCarHorn()
+{
+    injector::MakeJMP(0x43E1B0, a_DisableCarHorn, true);
+}
+
+void FixCamReset()
+{
+    injector::MakeNOP(0x431BAC, 7, true);
+}

@@ -534,3 +534,54 @@ void SecretBonusCash()
 {
     injector::MakeJMP(0x571784, a_SecretBonusCash, true);
 }
+
+HWND g_hWnd = nullptr;
+
+void FixTaskbar()
+{
+    if (!g_hWnd)
+        g_hWnd = GetForegroundWindow();
+
+    DWORD pid = 0;
+    GetWindowThreadProcessId(g_hWnd, &pid);
+
+    if (pid != GetCurrentProcessId())
+    {
+        g_hWnd = nullptr;
+    }
+
+    LONG_PTR exStyle = GetWindowLongPtr(g_hWnd, GWL_EXSTYLE);
+
+    bool changed = false;
+
+    if (exStyle & WS_EX_TOOLWINDOW)
+    {
+        exStyle &= ~WS_EX_TOOLWINDOW;
+        changed = true;
+    }
+
+    if (!(exStyle & WS_EX_APPWINDOW))
+    {
+        exStyle |= WS_EX_APPWINDOW;
+        changed = true;
+    }
+
+    if (changed)
+    {
+        SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, exStyle);
+
+        SetWindowPos(
+            g_hWnd,
+            nullptr,
+            0, 0, 0, 0,
+            SWP_NOMOVE |
+            SWP_NOSIZE |
+            SWP_NOZORDER |
+            SWP_FRAMECHANGED);
+    }
+
+    if (!IsWindowVisible(g_hWnd))
+    {
+        ShowWindow(g_hWnd, SW_SHOW);
+    }
+}

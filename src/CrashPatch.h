@@ -201,6 +201,9 @@ void Init()
     MPKick();
     FixCrash_MissileAmmo();
     SwitchToSpectator();
+    DisableCarHorn();
+    FixCamReset();
+    InputBoxCursorFix();
 
     // --- Main loop (runs until g_running is set to false) ---
     while (g_running.load(std::memory_order_relaxed))
@@ -241,7 +244,7 @@ void Init()
         HideUnusedElemsTrkLoad();
         NoDamage();
         MPFinishScreen();
-        //HiddenOpps();
+        FixTaskbar();
 
         // Sleep to reduce CPU usage. Original was 1ms; increased to 10ms.
         // Adjust based on required responsiveness.
