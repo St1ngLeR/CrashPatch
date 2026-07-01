@@ -1819,10 +1819,48 @@ void __declspec(naked) a_SpectatorControls()
     }
 }
 
+void __declspec(naked) a_SpectatorCheck1()
+{
+    __asm
+    {
+        cmp byte ptr ds: [0x78CEDC], 1
+        je loc_64F2CF
+        jmp loc_64FC9B
+
+    loc_64FC9B:
+        push 0x64FC9B
+        retn
+
+    loc_64F2CF:
+        push 0x64F2CF
+        retn
+    }
+}
+
+void __declspec(naked) a_SpectatorCheck2()
+{
+    __asm
+    {
+        cmp byte ptr ds : [0x78CEDC] , 1
+        je loc_64FD3B
+        jmp loc_64FD00
+
+    loc_64FD00:
+        push 0x64FD00
+        retn
+
+    loc_64FD3B:
+        push 0x64FD3B
+        retn
+    }
+}
+
 void SwitchToSpectator()
 {
-    injector::MakeNOP(0x64FC95, 6, true);
-    injector::MakeNOP(0x64FCFE, 2, true);
+    //injector::MakeNOP(0x64FC95, 6, true);
+    //injector::MakeNOP(0x64FCFE, 2, true);
+    injector::MakeJMP(0x64FC92, a_SpectatorCheck1, true);
+    injector::MakeJMP(0x64FCE9, a_SpectatorCheck2, true);
     injector::MakeJMP(0x64F2E3, a_SpectatorRace, true);
     injector::MakeJMP(0x5A4786, a_SpectatorPlayerName, true);
 
@@ -1856,7 +1894,46 @@ void DisableCarHorn()
     injector::MakeJMP(0x43E1B0, a_DisableCarHorn, true);
 }
 
+void __declspec(naked) a_FixCamReset()
+{
+    __asm
+    {
+        cmp edx, 6   // 6 - intro cam
+        je loc_431BB3
+        mov [ecx + 0x10], 0
+        jmp loc_431BB3
+
+    loc_431BB3:
+        push 0x431BB3
+        retn
+    }
+}
+
 void FixCamReset()
 {
-    injector::MakeNOP(0x431BAC, 7, true);
+    injector::MakeJMP(0x431BAC, a_FixCamReset, true);
+}
+
+void __declspec(naked) a_LookBackCamFix()
+{
+    __asm
+    {
+        cmp byte ptr ds: [0x78E4D8], 0
+        je skip
+        mov byte ptr [eax + 0x15], 0
+        mov byte ptr [eax + 0x16], 0
+    skip:
+        mov [esp+0xFEC],eax
+
+        jmp loc_431FD8
+
+    loc_431FD8:
+        push 0x431FD8
+        retn
+    }
+}
+
+void LookBackCamFix()
+{
+    injector::MakeJMP(0x431FD1, a_LookBackCamFix, true);
 }

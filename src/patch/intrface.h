@@ -926,3 +926,8 @@ void InputBoxCursorFix()
     injector::WriteMemory<int>(0x5F5502, 0x87E9, true);
     injector::WriteMemory<BYTE>(0x5F5506, 0, true);
 }
+
+void SmoothedLoadingBar()
+{
+    injector::WriteMemory<int>(0x542EF4, 1, true);
+}

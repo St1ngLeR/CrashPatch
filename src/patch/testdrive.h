@@ -75,34 +75,43 @@ void __declspec(naked) a_TestDriveOptions()
     }
 }
 
+float respawn_time = 3.f;
+
+void __declspec(naked) a_TestDriveRespawn()
+{
+    __asm
+    {
+        push esi
+        mov eax, esi  
+        fld dword ptr [eax + 0x72FC]
+        fcomp dword ptr [respawn_time]
+        fstsw ax
+        sahf
+        jb skip
+
+        mov eax, esi  
+        call sub_44BA60 
+        mov eax, esi
+        call sub_507400  
+
+    skip:
+        pop esi
+        ret 4   
+
+    sub_44BA60:
+        push 0x44BA60
+        retn
+
+    sub_507400:
+        push 0x507400
+        retn
+    }
+}
+
+
 void TestDriveRespawn()
 {
-    if (!CDNetwork())
-    {
-        if (CDRace())
-        {
-            if (GetRaceState() == (BYTE)CDRaceState::InProcess)
-            {
-                player_id0 = Player(0);
-            }
-
-            if ((GetGameMode() == (BYTE)CDGameMode::TestDrive) && (GetEventType() == (BYTE)CDEventType::testdrive_default))
-            {
-                if (GetPlayerParam<float>(CDPlayer::CarHealth, 0) > 0.f)
-                {
-                    old_car_timer = GetPlayerParam<float>(CDPlayer::CarTimer, 0);
-                }
-                else
-                {
-                    if (GetPlayerParam<float>(CDPlayer::CarTimer, 0) >= old_car_timer + 3.f)
-                    {
-                        RepairPlayerCar();
-                        RespawnOnCPPlayerCar();
-                    }
-                }
-            }
-        }
-    }
+    injector::MakeCALL(0x5060A0, a_TestDriveRespawn, true);
 }
 
 void TestDriveOptions()

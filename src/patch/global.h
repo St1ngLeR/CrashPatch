@@ -585,3 +585,53 @@ void FixTaskbar()
         ShowWindow(g_hWnd, SW_SHOW);
     }
 }
+
+float hide_skybox = 0.7f;
+
+void __declspec(naked) a_RenderSkyBoxInMenus()
+{
+    __asm
+    {
+        call sub_62F580
+
+        cmp byte ptr ds: [0x7BC99C], 0
+        je skybox
+        jmp skybox2
+
+    skybox:
+        cmp byte ptr ds: [0x70EB5C], 0x6E
+        jae skybox3
+        jmp loc_4A1695
+
+    skybox2:
+        mov eax, ds: [0x78D65C]
+        fld dword ptr [eax + 0x28C]
+        fcomp dword ptr [hide_skybox]
+        fstsw ax
+        sahf    
+        jnb loc_4A1695
+
+    skybox3:
+        mov eax, ds: [0x7CF700]
+        call sub_610B10
+
+        jmp loc_4A1695
+
+    loc_4A1695:
+        push 0x4A1695
+        retn
+
+    sub_610B10:
+        push 0x610B10
+        retn
+
+    sub_62F580 :
+        push 0x62F580
+        retn
+    }
+}
+
+void RenderSkyBoxInMenus()
+{
+    injector::MakeJMP(0x4A1690, a_RenderSkyBoxInMenus, true);
+}

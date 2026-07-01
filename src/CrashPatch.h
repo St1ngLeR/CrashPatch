@@ -161,6 +161,9 @@ void Init()
     if (cfg.showVignetteDuringGameplay)
         VignetteDuringGameplay();
 
+    if (cfg.testDriveRespawn)
+        TestDriveRespawn();
+
     // Always‑called one‑time patches (no condition)
     CrshPath();
     FixLaunchParameters();
@@ -202,8 +205,9 @@ void Init()
     FixCrash_MissileAmmo();
     SwitchToSpectator();
     DisableCarHorn();
-    FixCamReset();
     InputBoxCursorFix();
+    LookBackCamFix();
+    SmoothedLoadingBar();
 
     // --- Main loop (runs until g_running is set to false) ---
     while (g_running.load(std::memory_order_relaxed))
@@ -211,9 +215,6 @@ void Init()
         // Apply periodic patches (some conditional on config)
         if (cfg.playerIdleInPTB)
             PTBPlayerIdle();
-
-        if (cfg.testDriveRespawn)
-            TestDriveRespawn();
 
         if (cfg.enableSpeedLimiter)
             CarSpeedLimiter();
