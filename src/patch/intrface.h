@@ -931,3 +931,27 @@ void SmoothedLoadingBar()
 {
     injector::WriteMemory<int>(0x542EF4, 1, true);
 }
+
+void __declspec(naked) a_CareerProgressPercentFix()
+{
+    __asm
+    {
+        mov edx, [esp + 0x22C]
+
+        cmp edx, 100
+        jb loc_5121B7
+
+        mov edx, 100
+
+        jmp loc_5121B7
+
+    loc_5121B7:
+        push 0x5121B7
+        retn
+    }
+}
+
+void CareerProgressPercentFix()
+{
+    injector::MakeJMP(0x5121B0, a_CareerProgressPercentFix, true);
+}

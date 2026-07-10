@@ -1,9 +1,5 @@
 /* Multiplayer-related patches */
 
-std::string allcarfolders;
-
-bool AllCarsInMP_init;
-
 std::string continuerace_key = "QUESTIONCONTINUERACE";
 std::string continuerace_section = "CrashPatch.hud";
 
@@ -183,54 +179,10 @@ void __declspec(naked) MPVoting_actions()
     }
 }
 
-void getSubdirs(std::vector<std::string>& output, const std::string& path)
-{
-    WIN32_FIND_DATA findfiledata;
-    HANDLE hFind = INVALID_HANDLE_VALUE;
-
-    char fullpath[MAX_PATH];
-    GetFullPathName(path.c_str(), MAX_PATH, fullpath, 0);
-    std::string fp(fullpath);
-
-    hFind = FindFirstFile((LPCSTR)(fp + "\\*").c_str(), &findfiledata);
-    if (hFind != INVALID_HANDLE_VALUE)
-    {
-        do
-        {
-            if ((findfiledata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0
-                && (findfiledata.cFileName[0] != '.'))
-            {
-                output.push_back(findfiledata.cFileName);
-            }
-        } while (FindNextFile(hFind, &findfiledata) != 0);
-    }
-}
-
 void AllCarsInMP()
 {
-    if (AllCarsInMP_init == false)
-    {
-        if (*(BYTE*)0x7CF704 == 1)
-        {
-            std::vector<std::string> carfolders;
-
-            getSubdirs(carfolders, CDDir() + "\\trkdata\\cars\\");
-            sort(carfolders.begin(), carfolders.end());
-
-            std::stringstream ss;
-            for (const auto& carfolder : carfolders)
-            {
-                ss << carfolder << " ";
-            }
-
-            allcarfolders = ss.str();
-
-            std::transform(allcarfolders.begin(), allcarfolders.end(), allcarfolders.begin(), ::tolower);
-
-            injector::WriteMemory(0x564887, static_cast<void*>(allcarfolders.data()), true);
-            AllCarsInMP_init = true;
-        }
-    }
+    injector::MakeNOP(0x52C36C, 6, true);
+    injector::MakeNOP(0x586972, 6, true);
 }
 
 void MPFinishScreen()
