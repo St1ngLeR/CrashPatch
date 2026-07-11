@@ -1937,3 +1937,60 @@ void LookBackCamFix()
 {
     injector::MakeJMP(0x431FD1, a_LookBackCamFix, true);
 }
+
+const char* ironhorze_fb1 = "ironhorze.fb1";
+
+void __declspec(naked) a_IronhorzeBumperFix()
+{
+    __asm
+    {
+        call sub_6959C9
+
+        mov ebx, -1
+        call sub_6959C9
+        mov edx, ironhorze_fb1
+        lea eax, [esp + 0x1F0]
+        call sub_69586C
+        mov ebx, eax
+        mov edx, esi
+        lea eax, [esp + 0x200]
+        call sub_676540
+        mov edx, eax
+        mov eax, esi
+        call sub_695F1D
+        lea eax, [esp + 0x200]
+        xor edx, edx
+        call sub_6959C9
+        lea eax, [esp + 0x1F0]
+        xor edx, edx
+        mov ebx, -1
+        call sub_6959C9
+
+        jmp loc_5DE33F
+
+    loc_5DE33F:
+        push 0x5DE33F
+        retn
+
+    sub_6959C9:
+        push 0x6959C9
+        retn
+
+    sub_695F1D:
+        push 0x695F1D
+        retn
+
+    sub_676540:
+        push 0x676540
+        retn
+
+    sub_69586C:
+        push 0x69586C
+        retn
+    }
+}
+
+void IronhorzeBumperFix()
+{
+    injector::MakeJMP(0x5DE33A, a_IronhorzeBumperFix, true);
+}
