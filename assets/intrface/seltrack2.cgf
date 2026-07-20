@@ -1,5 +1,5 @@
 CrashGUI-File                                          #
-black.tga      		                       # Background picture
+backmain.tga      		                       # Background picture
 $ID intrface/seltrack.cgf MenuTitle			                       # Title string
 open   					               # "blinds" background type
 default 					       # default group
