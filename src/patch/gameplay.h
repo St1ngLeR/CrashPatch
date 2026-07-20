@@ -721,28 +721,31 @@ void RandomNumPlates()
         {
             if (RandomNumPlates_init == false)
             {
-                for (const auto& entry : std::filesystem::recursive_directory_iterator(CDDir() + numplates_dir))
+                if (std::filesystem::exists(CDDir() + numplates_dir))
                 {
-                    if (entry.is_regular_file())
+                    for (const auto& entry : std::filesystem::recursive_directory_iterator(CDDir() + numplates_dir))
                     {
-                        std::filesystem::path relative = std::filesystem::relative(entry.path(), CDDir() + numplates_dir);
-                        std::string filename = relative.filename().stem().string();
-                        std::string extension = relative.extension().string();
-                        std::string result = relative.replace_extension(".tga").string();
-
-                        if ((extension == ".tga") || (extension == ".dds"))
+                        if (entry.is_regular_file())
                         {
-                            if (filename.rfind("l_", 0) == 0)
+                            std::filesystem::path relative = std::filesystem::relative(entry.path(), CDDir() + numplates_dir);
+                            std::string filename = relative.filename().stem().string();
+                            std::string extension = relative.extension().string();
+                            std::string result = relative.replace_extension(".tga").string();
+
+                            if ((extension == ".tga") || (extension == ".dds"))
                             {
-                                numplates_l.push_back(result);
-                            }
-                            else if (filename.rfind("s_", 0) == 0)
-                            {
-                                numplates_s.push_back(result);
-                            }
-                            else if (filename.rfind("u_", 0) == 0)
-                            {
-                                numplates_u.push_back(result);
+                                if (filename.rfind("l_", 0) == 0)
+                                {
+                                    numplates_l.push_back(result);
+                                }
+                                else if (filename.rfind("s_", 0) == 0)
+                                {
+                                    numplates_s.push_back(result);
+                                }
+                                else if (filename.rfind("u_", 0) == 0)
+                                {
+                                    numplates_u.push_back(result);
+                                }
                             }
                         }
                     }
@@ -1994,3 +1997,39 @@ void IronhorzeBumperFix()
 {
     injector::MakeJMP(0x5DE33A, a_IronhorzeBumperFix, true);
 }
+
+//const char* mg_ammo = "Minigun.Ammo";
+//const char* mg_sps = "Minigun.ShotsPerSec";
+//
+//void __declspec(naked) a_MinigunPreLoadValues()
+//{
+//    __asm
+//    {
+//        mov edx, mg_ammo
+//        mov eax, ds: [0x7E30FC]
+//        call sub_666CA0
+//
+//        mov dword ptr[ebp + 0x4874], eax
+//
+//        mov edx, mg_sps
+//        mov eax, ds: [0x7E30FC]
+//        call sub_666CA0
+//
+//        mov dword ptr [ebp + 0x4878], eax
+//
+//        jmp loc_4748B2
+//
+//    loc_4748B2:
+//        push 0x4748B2
+//        retn
+//
+//    sub_666CA0:
+//        push 0x666CA0
+//        retn
+//    }
+//}
+//
+//void MinigunPreLoadValues()
+//{
+//    injector::MakeJMP(0x4748A8, a_MinigunPreLoadValues, true);
+//}
