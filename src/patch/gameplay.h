@@ -6,7 +6,7 @@ bool AftBurParams_init;
 
 std::filesystem::path aftbur_fullpath;
 
-double expldam = -200;
+double expldam = -100;
 
 std::vector<std::string> numplates_l = { "l_def.tga" };
 std::vector<std::string> numplates_s = { "s_def.tga" };
