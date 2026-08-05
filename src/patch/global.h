@@ -277,65 +277,57 @@ void LODImprovements()
 
 void SaveContentUnlimit()
 {
-    if (SaveContentUnlimit_init == false)
-    {
-        if (*(BYTE*)0x7CF704 == 1)
-        {
-            injector::WriteMemory(0x6607C2, save_content, true);
-            injector::WriteMemory(0x660826, save_content, true);
-            injector::WriteMemory(0x660981, save_content, true);
-            injector::WriteMemory(0x6609F5, save_content, true);
-            injector::WriteMemory(0x660A20, save_content, true);
-            injector::WriteMemory(0x660AA1, save_content, true);
-            injector::WriteMemory(0x660B11, save_content, true);
-            injector::WriteMemory(0x660B2F, save_content, true);
-            injector::WriteMemory(0x660BB3, save_content, true);
-            injector::WriteMemory(0x660BC9, save_content, true);
-            injector::WriteMemory(0x660C6F, save_content, true);
-            injector::WriteMemory(0x660D70, save_content, true);
-            injector::WriteMemory(0x660E5C, save_content, true);
-            injector::WriteMemory(0x660F27, save_content, true);
-            injector::WriteMemory(0x660F62, save_content, true);
-            injector::WriteMemory(0x660FF5, save_content, true);
-            injector::WriteMemory(0x661022, save_content, true);
-            injector::WriteMemory(0x6610AB, save_content, true);
-            injector::WriteMemory(0x6610D1, save_content, true);
-            injector::WriteMemory(0x661140, save_content, true);
-            injector::WriteMemory(0x661161, save_content, true);
-            injector::WriteMemory(0x661173, save_content, true);
-            injector::WriteMemory(0x661191, save_content, true);
-            injector::WriteMemory(0x661211, save_content, true);
-            injector::WriteMemory(0x661291, save_content, true);
-            injector::WriteMemory(0x661311, save_content, true);
-            injector::WriteMemory(0x66188C, save_content, true);
-            injector::WriteMemory(0x661962, save_content, true);
-            injector::WriteMemory(0x661BFF, save_content, true);
-            injector::WriteMemory(0x661C1D, save_content, true);
-            injector::WriteMemory(0x661C37, save_content, true);
+    injector::WriteMemory(0x6607C2, save_content, true);
+    injector::WriteMemory(0x660826, save_content, true);
+    injector::WriteMemory(0x660981, save_content, true);
+    injector::WriteMemory(0x6609F5, save_content, true);
+    injector::WriteMemory(0x660A20, save_content, true);
+    injector::WriteMemory(0x660AA1, save_content, true);
+    injector::WriteMemory(0x660B11, save_content, true);
+    injector::WriteMemory(0x660B2F, save_content, true);
+    injector::WriteMemory(0x660BB3, save_content, true);
+    injector::WriteMemory(0x660BC9, save_content, true);
+    injector::WriteMemory(0x660C6F, save_content, true);
+    injector::WriteMemory(0x660D70, save_content, true);
+    injector::WriteMemory(0x660E5C, save_content, true);
+    injector::WriteMemory(0x660F27, save_content, true);
+    injector::WriteMemory(0x660F62, save_content, true);
+    injector::WriteMemory(0x660FF5, save_content, true);
+    injector::WriteMemory(0x661022, save_content, true);
+    injector::WriteMemory(0x6610AB, save_content, true);
+    injector::WriteMemory(0x6610D1, save_content, true);
+    injector::WriteMemory(0x661140, save_content, true);
+    injector::WriteMemory(0x661161, save_content, true);
+    injector::WriteMemory(0x661173, save_content, true);
+    injector::WriteMemory(0x661191, save_content, true);
+    injector::WriteMemory(0x661211, save_content, true);
+    injector::WriteMemory(0x661291, save_content, true);
+    injector::WriteMemory(0x661311, save_content, true);
+    injector::WriteMemory(0x66188C, save_content, true);
+    injector::WriteMemory(0x661962, save_content, true);
+    injector::WriteMemory(0x661BFF, save_content, true);
+    injector::WriteMemory(0x661C1D, save_content, true);
+    injector::WriteMemory(0x661C37, save_content, true);
 
-            injector::WriteMemory(0x66109C, save_content + 3, true);
-            injector::WriteMemory(0x6617CB, save_content + 3, true);
+    injector::WriteMemory(0x66109C, save_content + 3, true);
+    injector::WriteMemory(0x6617CB, save_content + 3, true);
 
-            injector::WriteMemory(0x660BD4, save_content + 4, true);
-            injector::WriteMemory(0x660C32, save_content + 4, true);
-            injector::WriteMemory(0x66100D, save_content + 4, true);
-            injector::WriteMemory(0x66102A, save_content + 4, true);
-            injector::WriteMemory(0x661132, save_content + 4, true);
-            injector::WriteMemory(0x661138, save_content + 4, true);
-            injector::WriteMemory(0x6616A4, save_content + 4, true);
-            injector::WriteMemory(0x661703, save_content + 4, true);
-            injector::WriteMemory(0x661741, save_content + 4, true);
-            injector::WriteMemory(0x661756, save_content + 4, true);
-            injector::WriteMemory(0x6617DA, save_content + 4, true);
-            injector::WriteMemory(0x66180E, save_content + 4, true);
-            injector::WriteMemory(0x661815, save_content + 4, true);
+    injector::WriteMemory(0x660BD4, save_content + 4, true);
+    injector::WriteMemory(0x660C32, save_content + 4, true);
+    injector::WriteMemory(0x66100D, save_content + 4, true);
+    injector::WriteMemory(0x66102A, save_content + 4, true);
+    injector::WriteMemory(0x661132, save_content + 4, true);
+    injector::WriteMemory(0x661138, save_content + 4, true);
+    injector::WriteMemory(0x6616A4, save_content + 4, true);
+    injector::WriteMemory(0x661703, save_content + 4, true);
+    injector::WriteMemory(0x661741, save_content + 4, true);
+    injector::WriteMemory(0x661756, save_content + 4, true);
+    injector::WriteMemory(0x6617DA, save_content + 4, true);
+    injector::WriteMemory(0x66180E, save_content + 4, true);
+    injector::WriteMemory(0x661815, save_content + 4, true);
 
-            injector::WriteMemory(0x661146, save_content + 5, true);
-            injector::WriteMemory(0x66181B, save_content + 5, true);
-
-            SaveContentUnlimit_init = true;
-        }
-    }
+    injector::WriteMemory(0x661146, save_content + 5, true);
+    injector::WriteMemory(0x66181B, save_content + 5, true);
 }
 
 void EnvSound()
@@ -634,4 +626,10 @@ void __declspec(naked) a_RenderSkyBoxInMenus()
 void RenderSkyBoxInMenus()
 {
     injector::MakeJMP(0x4A1690, a_RenderSkyBoxInMenus, true);
+}
+
+void ScreenshotHUD()
+{
+    injector::WriteMemory(0x5A40C1, 0xFFFED5E9, true);
+    injector::WriteMemory<BYTE>(0x5A40C5, 0xFF, true);
 }

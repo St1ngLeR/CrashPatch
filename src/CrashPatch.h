@@ -211,6 +211,8 @@ void Init()
     AllCarsInMP();
     CareerProgressPercentFix();
     IronhorzeBumperFix();
+    SaveContentUnlimit();
+    ScreenshotHUD();
 
     // --- Main loop (runs until g_running is set to false) ---
     while (g_running.load(std::memory_order_relaxed))
@@ -235,7 +237,6 @@ void Init()
             OilEffect();
 
         // Always‑called periodic patches
-        SaveContentUnlimit();
         ChangeKeyboardLayout();
         VehicleBlastBomb();
         IntroMenu();
