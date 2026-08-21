@@ -6,7 +6,7 @@ bool AftBurParams_init;
 
 std::filesystem::path aftbur_fullpath;
 
-double expldam = -100;
+double expldam = -300000000;
 
 std::vector<std::string> numplates_l = { "l_def.tga" };
 std::vector<std::string> numplates_s = { "s_def.tga" };
@@ -85,8 +85,8 @@ void __declspec(naked) a_DamageFromExplosion()
 {
     __asm
     {
-        fld dword ptr [eax + 0x944]
-        fmul dword ptr [eax + 0x65F0]
+        fld dword ptr [eax + 0x65F0]
+        fdiv dword ptr [eax + 0x944]
         fmul qword ptr [expldam]
         faddp st(1), st(0)
         jmp loc_5C05C6
@@ -1996,6 +1996,34 @@ void __declspec(naked) a_IronhorzeBumperFix()
 void IronhorzeBumperFix()
 {
     injector::MakeJMP(0x5DE33A, a_IronhorzeBumperFix, true);
+}
+
+void __declspec(naked) a_StuntScoreFix()
+{
+    __asm
+    {
+        cmp byte ptr ds: [0x7CBFD0], 1
+        jne skip
+
+        push ecx
+        mov ecx, [eax + 0x95DC]
+        add [eax + 0x7990], ecx
+        pop ecx
+
+    skip:
+        mov ds: [0x7BC9EC], dl
+
+        jmp loc_575691
+
+    loc_575691:
+        push 0x575691
+        retn
+    }
+}
+
+void StuntScoreFix()
+{
+    injector::MakeJMP(0x57568B, a_StuntScoreFix, true);
 }
 
 //const char* mg_ammo = "Minigun.Ammo";
