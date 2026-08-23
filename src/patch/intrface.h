@@ -954,4 +954,5 @@ void __declspec(naked) a_CareerProgressPercentFix()
 void CareerProgressPercentFix()
 {
     injector::MakeJMP(0x5121B0, a_CareerProgressPercentFix, true);
+    injector::WriteMemory<BYTE>(0x512208, 0x72, true);
 }
