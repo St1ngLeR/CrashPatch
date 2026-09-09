@@ -17,31 +17,6 @@ int is_ambsound_looped = 0;
 
 int p_ambsound;
 
-std::string GetExeDirectory()
-{
-    char buffer[MAX_PATH];
-    DWORD result = GetModuleFileName(NULL, buffer, MAX_PATH);
-
-    if (result == 0)
-    {
-        return "";
-    }
-
-    std::string::size_type pos = std::string(buffer).find_last_of("\\/");
-    return std::string(buffer).substr(0, pos);
-}
-
-char crshpath_buffer[MAX_PATH];
-
-void* crshpath = static_cast<void*>(malloc(300));
-void* crshpath_str = static_cast<void*>(malloc(300));
-void* crshpath_str2 = static_cast<void*>(malloc(300));
-void* crshpath_root = static_cast<void*>(malloc(16));
-
-std::string crshpath_root_str = "ROOT";
-
-std::string curpth = GetExeDirectory();
-
 void __declspec(naked) a_EnvSoundHandler()
 {
     __asm
@@ -164,21 +139,6 @@ void __declspec(naked) a_EnvSoundResetInMPVote()
 
     sub_69598E:
         push 0x69598E
-        retn
-    }
-}
-
-void __declspec(naked) a_CrshPath()
-{
-    __asm
-    {
-        mov esi, dword ptr ds : [crshpath]
-        /*mov eax, esi*/
-
-        jmp finish
-
-    finish:
-        push 0x672303
         retn
     }
 }
@@ -378,29 +338,41 @@ void NewRandomSeed()
     }
 }
 
-void CrshPath() // I hate so much how this thing is works but hey, it works!
+std::string crshpath;
+
+void GetCrashdayDirectory()
 {
-    injector::MakeNOP(0x672386, 5, true);
+    char buffer[MAX_PATH];
+    DWORD result = GetModuleFileName(NULL, buffer, MAX_PATH);
+    std::string::size_type pos = std::string(buffer).find_last_of("\\/");
+    crshpath = "Path=" + std::string(buffer).substr(0, pos);
+}
 
-    injector::WriteMemory(crshpath, crshpath_str, true);
-    injector::WriteMemory<int>((int)crshpath + 0x4, 0, true);
-    injector::WriteMemory<int>((int)crshpath + 0x8, curpth.length(), true);
-    injector::WriteMemory((int)crshpath + 0xC, crshpath_str2, true);
-    injector::WriteMemory((int)crshpath + 0x10, crshpath_root, true);
+void __declspec(naked) a_CrshPath()
+{
+    __asm
+    {
+        call GetCrashdayDirectory
 
-    injector::WriteMemory(crshpath_str, 1, true);
-    injector::WriteMemory<int>((int)crshpath_str + 0x4, curpth.length(), true);
-    injector::WriteMemory<int>((int)crshpath_str + 0x8, curpth.length(), true);
-    WriteString<uint32_t>((uintptr_t)crshpath_str + 0xC, curpth.c_str(), true);
+        mov eax, dword ptr ds: [crshpath]
 
-    WriteString<uint32_t>((uintptr_t)crshpath_str2, curpth.c_str(), true);
+        jmp end
 
-    injector::WriteMemory(crshpath_root, 1, true);
-    injector::WriteMemory<int>((int)crshpath_root + 0x4, crshpath_root_str.length(), true);
-    injector::WriteMemory<int>((int)crshpath_root + 0x8, crshpath_root_str.length(), true);
-    WriteString<uint32_t>((uintptr_t)crshpath_root + 0xC, crshpath_root_str.c_str(), true);
+    end:
+        push 0x67214B
+        retn
 
-    injector::MakeJMP(0x6723C3, a_CrshPath, true);
+    }
+}
+
+void CrshPath()
+{
+    injector::MakeJMP(0x672141, a_CrshPath, true);
+    injector::MakeNOP(0x672119, 7, true);
+    injector::MakeNOP(0x67221F, 5, true);
+    injector::MakeNOP(0x672146, 5, true);
+    injector::MakeJMP(0x672234, 0x672303, true);
+    injector::MakeJMP(0x6723C3, 0x6720EB, true);
 }
 
 void VignetteDuringGameplay()
