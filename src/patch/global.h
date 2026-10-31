@@ -361,12 +361,13 @@ void __declspec(naked) a_CrshPath()
     end:
         push 0x67214B
         retn
-
+            
     }
 }
 
 void CrshPath()
 {
+    injector::WriteMemory(0x6FF90E, '\0', true);
     injector::MakeJMP(0x672141, a_CrshPath, true);
     injector::MakeNOP(0x672119, 7, true);
     injector::MakeNOP(0x67221F, 5, true);
@@ -604,4 +605,13 @@ void ScreenshotHUD()
 {
     injector::WriteMemory(0x5A40C1, 0xFFFED5E9, true);
     injector::WriteMemory<BYTE>(0x5A40C5, 0xFF, true);
+}
+
+void ScreenshotAlphaFix()   // by Fixik
+{
+    injector::WriteMemory<uint8_t>(0x631460, 0x0D, true);
+    injector::WriteMemory<uint8_t>(0x631460 + 1, 0x00, true);
+    injector::WriteMemory<uint8_t>(0x631460 + 2, 0x00, true);
+    injector::WriteMemory<uint8_t>(0x631460 + 3, 0x00, true);
+    injector::WriteMemory<uint8_t>(0x631460 + 4, 0xFF, true);
 }

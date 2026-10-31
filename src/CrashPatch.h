@@ -138,9 +138,11 @@ void Init()
 {
     SetUnhandledExceptionFilter(CrashHandler);
 
-    // --- One‑time startup ---
-    // Write compile‑time hash to memory (original anti‑debug / obfuscation)
-    injector::WriteMemory<int>(0x485C86, hashTime(), true);
+    int gamever = hashTime();
+    injector::WriteMemory<int>(0x485C86, gamever, true);
+    injector::WriteMemory<int>(0x695432, gamever >> 16, true);
+    injector::WriteMemory<short>(0x695434, 0, true);
+    injector::WriteMemory<int>(0x69541C, gamever & 0xFFFF, true);
 
     // Load configuration from INI file
     wchar_t modulePath[MAX_PATH];
@@ -165,7 +167,7 @@ void Init()
         TestDriveRespawn();
 
     // Always‑called one‑time patches (no condition)
-    CrshPath();
+    //CrshPath();
     FixLaunchParameters();
     NoPauseOnWindowNotFocused();
     ExtendedViewRange();
@@ -214,6 +216,7 @@ void Init()
     SaveContentUnlimit();
     ScreenshotHUD();
     StuntScoreFix();
+    ScreenshotAlphaFix();   // by Fixik
 
     // --- Main loop (runs until g_running is set to false) ---
     while (g_running.load(std::memory_order_relaxed))

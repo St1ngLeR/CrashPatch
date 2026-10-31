@@ -1495,6 +1495,7 @@ void SetupEventTimeSettings()
     injector::MakeJMP(0x589944, a_SetupEventTimeSettings_SetForMP);
 
     injector::MakeNOP(0x679C2A, 2); // we need to NOP this instruction to force vertex shadow file always updating (because every ambience has different sun position)
+    injector::WriteMemory<BYTE>(0x4F66A0, 0xC3, true);
 }
 
 void __declspec(naked) a_MissileCapacity()
@@ -1577,6 +1578,8 @@ void HiddenOpps()
 void FixCrash_MissileAmmo()
 {
     injector::WriteMemory<short>(0x4497F8, 0x0AEB, true);
+    injector::MakeNOP(0x449827, 6, true);
+    injector::MakeNOP(0x44A909, 6, true);
 }
 
 float spec_arrow_size = 8.f;
