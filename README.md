@@ -16,7 +16,6 @@ Changes marked with ⚙️ can be configured/toggled via the INI file. These opt
 - The game now shows screen vignette (filter) during regular gameplay.
 - Skipped "Press ENTER to continue..." in the event loading screen.
 - Fixed launch parameters. "window" paramater is properly enables windowed mode.
-- Game path is runtime read by application folder and not by "crshpath.ini" file.
 - Removed the creation of the empty "screen.log" file.
 - Removed the dependency on the "rpmtex.tga" file.
 - Increased height limit for automatic car respawning.
